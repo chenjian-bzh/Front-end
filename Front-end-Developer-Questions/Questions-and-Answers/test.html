@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body{
+            box-sizing: border-box;
+        }
+        .box1{
+            height: 100px;
+            width: 100px;
+            background-color: blueviolet;
+            padding: 20px;
+            border: 10px;
+            margin: 0 auto;
+        }
+
+        p + p{
+            color:red;
+        }
+
+        p + span{
+            color:yellow;
+        }
+
+        div p{
+            color:green;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1"></div>
+
+    <div>
+        <p>I'm a paragraph</p>
+        <p>I get selected!</p>
+    </div>
+        
+    <div>
+        <p>I'm a paragraph</p>
+        <span>Monkey hair</span>
+        <div>I will NOT get selected</div>
+    </div>
+</body>
+</html>

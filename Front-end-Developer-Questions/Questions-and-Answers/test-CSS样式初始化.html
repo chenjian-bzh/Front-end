@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+            /*一、不适用通配符初始化*/
+            body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin:0; padding:0; }
+            body, button, input, select, textarea { font:12px/1.5tahoma, arial, \5b8b\4f53; }
+            h1, h2, h3, h4, h5, h6{ font-size:100%; }
+            address, cite, dfn, em, var { font-style:normal; }
+            code, kbd, pre, samp { font-family:couriernew, courier, monospace; }
+            small{ font-size:12px; }
+            ul, ol { list-style:none; }
+            a { text-decoration:none; }
+            a:hover { text-decoration:underline; }
+            sup { vertical-align:text-top; }
+            sub{ vertical-align:text-bottom; }
+            legend { color:#000; }
+            fieldset, img { border:0; }
+            button, input, select, textarea { font-size:100%; }
+            table { border-collapse:collapse; border-spacing:0; }
+
+
+
+
+
+            /*二、通配符初始化*/
+            *{
+                margin: 0;
+                padding: 0;
+            }
+
+            /*
+             * 通配符的使用争议：
+             * 
+             * 一般都都不建议用通配符
+             *  1、性能问题
+             *  2、浪费问题
+             * 
+             * 若非要用通配符的话：建议
+             *  1、如果网站非常大，内容非常多，就不建议用通配符
+             *  2、如果小网站，内容不多，（比如：单页面）可以用通配符
+             */
+        </style>
+    </head>
+    <body>
+        <!--
+            标签样式初始化（css reset）
+                原则：但凡页面中要用到的标签，有默认样式，会影响到其它的代码，这个时候就要把清掉。用不到的标签就不用清除
+
+                哪些样式需要重置
+                    与盒模型相关的样式
+                        margin
+                        padding
+                        border
+                    标签特有的样式
+                        ul  li
+                        ol  li
+        -->
+        <a href="">123</a>
+        <h1>标题</h1>
+        <h2>标题</h2>
+        <h3>标题</h3>
+        <h4>标题</h4>
+        <h5>标题</h5>
+        <h6>标题</h6>
+        <p>这里可以放一段话</p>
+        <strong>强调</strong>
+        <em>强调</em>
+        <ul>
+            <li>ul是无序列表</li>
+            <li>li是列表项</li>
+            <li>ul的子元素只能是li</li>
+            <!--<div>这是一个div</div>-->
+        </ul>
+        <ol>
+            <li>ol是一个有序列表</li>
+            <li>li是列表项</li>
+            <li>ol的子元素只能是li</li>
+            <!--<div>这是一个div</div>-->
+        </ol>
+        <dl>
+            <dt>dl是自定义列表，dt表示列表的标题</dt>
+            <dd>dd是列表项</dd>
+            <dd>dt只能出现一次，dd可以出现多次</dd>
+            <!--<div>这是一个div</div>-->
+        </dl>
+        <mark>标记</mark>
+    </body>
+</html>
