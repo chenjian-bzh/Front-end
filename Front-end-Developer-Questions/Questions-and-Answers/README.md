@@ -773,16 +773,6 @@
 		margin用于布局分开元素使元素与元素互不相干；
 		padding用于元素与内容之间的间隔，让内容（文字）与（包裹）元素之间有一段
 
-- 怎么让Chrome支持小于12px 的文字？
-
-1、用图片：如果是内容固定不变情况下，使用将小于12px文字内容切出做图片，这样不影响兼容也不影响美观。
-
-2、使用12px及12px以上字体大小：为了兼容各大主流浏览器，建议设计美工图时候设置大于或等于12px的字体大小，如果是接单的这个时候就需要给客户讲解小于12px浏览器不兼容等事宜。
-
-3、继续使用小于12px字体大小样式设置：如果不考虑chrome可以不用考虑兼容，同时在设置小于12px对象设置-webkit-text-size-adjust:none，做到最大兼容考虑。（但是这个只能在27.0以下版本的chrome浏览器中使用，高版本不支持-webkit-text-size-adjust了）
-
-4、使用css3里的一个属性：transform：scale（） ， p{font-size:10px;-webkit-transform:scale(0.8);}//0.8是缩放比例
-
 
 - 抽离样式模块怎么写，说出思路，有无实践经验？[阿里航旅的面试题]
 
@@ -799,6 +789,13 @@
  (3) 父元素绑定wheel事件（touchstart 、 touchmove事件）
 
 - 什么是响应式设计？响应式设计的基本原理是什么？如何兼容低版本的IE？
+
+（1）响应式网站设计(Responsive Web design)的理念是：集中创建页面的图片排版大小，可以智 
+	能地根据用户行为以及使用的设备环境（系统平台、屏幕尺寸、屏幕定向等）进行相对应的布局。
+
+（2）基本原理: 媒体查询 @media  (http://www.runoob.com/cssref/css3-pr-mediaquery.html  ,  https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Media_queries)
+
+（3）兼容IE可以使用JS辅助一下来解决
 
 - 视差滚动效果，如何给每页做不同的动画？（回到顶部，向下滑动要再次出现，和只出现一次分别怎么做？）
 
