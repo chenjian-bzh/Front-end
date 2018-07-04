@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        a{
+            display:block;
+        }
+
+        a::after{
+            content: "("attr(alt)")"
+        }
+
+        a::before{
+            content: url("./logo.jpg")
+        }
+
+        h4{
+            counter-increment: chapter 2; 
+        }
+
+        h4:before { 
+            content: "Index "counter(chapter)". " 
+        }
+
+        p {
+            position: relative;
+            display: inline-block;
+            color: #000;
+            font-size: 20px;
+            padding: 5px 30px;
+        }
+
+        p:hover::before, p:hover::after { position: absolute; }
+        p:hover::before { content: "\5B"; left: -5px; }
+        p:hover::after { content: "\5D"; right:  -5px; }
+
+
+
+        h5 {
+            position: relative;
+            display: inline-block;
+            outline: none;
+            text-decoration: none;
+            color: #000;
+            font-size: 18px;
+            padding: 0 10px;
+        }
+
+        /* 大框 */
+        h5:hover::before, h5:hover::after { 
+            content: "";
+            display: block;
+            position: absolute;
+            top: -15%;
+            left: -14%;
+            width: 120%;
+            height: 120%;
+            border-style: solid;
+            border-width: 4px;
+            border-color: #DDD;
+        }
+
+        /* 小框 */
+        h5:hover::after {
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            border-width: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <h4>test1</h4>
+        <h4>test2</h4>
+        <a class='test' alt="asdasdas" html="sda.com"></a>
+        <p>this is a test</p>
+        <h5>this is a test 2</h5>
+    </div>
+</body>
+</html>

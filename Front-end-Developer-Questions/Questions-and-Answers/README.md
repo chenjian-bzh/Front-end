@@ -323,12 +323,78 @@
 ## <a name='css'>CSS</a>
 
 - 介绍一下标准的CSS的盒子模型？低版本IE的盒子模型有什么不同的？
-	https://juejin.im/post/59ef72f5f265da4320026f76	
 
-		（1）有两种， IE 盒子模型、W3C 盒子模型； (对应于box-sizing的content-box和border-box)
-		（2）盒模型： 内容(content)、填充(padding)、边界(margin)、 边框(border)；
-		（3）区  别： IE的content部分把 border 和 padding计算了进去;
+	https://juejin.im/post/5a7d22636fb9a0633c660359
 
+	在页面中，每个元素被表示为一个矩形的方框，这就是盒子。盒子是CSS布局中的基本单位，一张页面是由一个或多个盒子组成的。盒子从内到外由内容(Content)、内边距(Padding)、边框(Border)和外边距(Margin)组成，盒子的大小由content+padding+border这几部分决定，把margin算进去的那是盒子占据的位置，而不是盒子的大小！  。同时，盒子会为其子孙创建包含块(containing block)，用于计算内部盒子的大小及位置，由元素样式的position属性确定。盒子分为多种类型，在没有CSS干预的情况下，它的类型由元素的类型决定，CSS的display属性能够修改它的类型。
+	
+	按照类型划分盒子分为块级盒子和行级盒子 元素的类型和display属性，决定了这个Box的类型。 不同类型的Box， 会参与不同的Formatting context(一个决定如何渲染文档的容器)，因此Box内的元素会以不同的方式渲染。
+	
+	块级盒子 : display的值为block、table或者list-item的元素是块级元素(block level element)，它们会生成块级盒子(block level box)并且参加块级格式化上下文(Block Formatting Context，BFC)。块级盒子能够设置宽和高，它被定义为放在其他盒子上面的盒子，对外布局的影响主要表现为在它之前和之后的内容都不能和它处于同一行。
+	默认属于块级盒子的元素主要有：div , p , table , pre , ol , ul ,li , form , 各级标签h1 、h2 、 h3等。块级盒子模型分为W3C标准模型和IE标准模型，可以使用CSS的box-sizing属性控制。W3C 标准盒模型的盒子属性width,height只包含内容content，不包含border和padding ，  IE 盒模型的盒子属性width,height包含border和padding，指的是content+padding+border。
+	
+	行级盒子 : display属性为inline、inline-block、inline-table的元素是行内级元素（inline-level elements），行内级元素生成行内级级盒（inline-level boxes）。
+
+- 盒子的类型（http://layout.imweb.io/article/box-type.html）
+
+	同样当元素的 CSS 属性 display 为 inline, inline-block, inline-table, inline-flex, inline-grid 时，它就是行内级元素（inline-level elements），
+
+	
+- 对BFC规范(块级格式化上下文：block formatting context)的理解？ (https://juejin.im/post/5a7d22636fb9a0633c660359)(http://www.html-js.com/article/1866)
+
+	它是格式化上下文的一种 ， 首先格式化上下文是CSS2.1中的概念，它是一个独立容器，决定了元素如何对其内容进行定位,以及与其他元素的关系和相互作用。一个页面是由很多个 Box 组成的,元素的类型和 display 属性, 决定了这个 Box 的类型， 不同类型的 Box 会参与不同的 Formatting Context（决定如何渲染文档的容器）, 因此Box会以不同的方式渲染,也就是说BFC内部的元素和外部的元素不会互相影响。  CSS2中BFC、IFC ，CSS3中又新加入了FFC 、 GFC。
+	
+	BFC 是一块独立的渲染区域，只有它内部的块级盒子参与它的布局。这些块级盒子的布局方式不会受BFC外部布局的影响，同时它们也不会影响BFC外部的布局。块级格式化上下文中的“块级”两字并不是指BFC是由块级元素产生的，而是指块级元素会参加到BFC的布局中来。
+
+	##### 以下几种元素能够在其内部产生BFC：
+
+	根元素或其他包含它的元素
+
+	float 的值不为 none
+
+	position 的值不为 static 或 relative
+
+	display 的值为 table-cell、table-caption、inline-block、flex 或 inline-flex
+
+	overflow 的值不为 visibility
+
+	##### BFC的布局规则:
+
+	BFC内部的块级盒子会在垂直方向一个接一个的堆放，并且相邻的块级盒子的外边距(Margin)会折叠，以最大的一个外边距作为两个盒子之间的距离；
+
+	计算BFC的高度时，它内部的浮动元素也会被计算进去；
+
+	BFC的区域不会和浮动盒子相重叠；
+
+	BFC内部每个元素的Margin Box的左边都会和包含块的Border Box的左边相接触；在从右往左格式化的情况下，则是每个元素的Margin Box的右边都会和包含块的Border Box的右边相接触；
+
+	BFC在页面上是一个独立的区域，它内部的元素的布局不会和外部元素的布局产生相互影响；
+	
+
+- IFC规范的理解 ？ （https://segmentfault.com/a/1190000004466536）
+
+
+- 你对line-height是如何理解的？
+
+	具体可以查看[这篇博客]("https://www.zhangxinxu.com/wordpress/2009/11/css%E8%A1%8C%E9%AB%98line-height%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%8A%E5%BA%94%E7%94%A8/ 
+	") .
+
+	其中涉及了 inline-block使用的相关问题 ： https://www.zhihu.com/question/28057944
+
+	到底这个line-height行高怎么就产生了高度呢？在inline box模型中，有个line boxes，这玩意是看不见的，这个玩意的工作就是包裹每行文字。一行文字一个line boxes。例如“艾佛森退役”这5个字，如果它们在一行显示，你艾佛森再牛逼，对不起，只有一个line boxes罩着你；但“春哥纯爷们”这5个字，要是竖着写，一行一个，那真是够爷们，一个字罩着一个line boxes，于是总计五个line boxes。line boxes什么特性也没有，就高度。所以一个没有设置height属性的div的高度就是由一个一个line boxes的高度堆积而成的。
+
+	其实line boxes不是直接的生产者，属于中层干部，真正的活儿都是它的手下 – inline boxes干的，这些手下就是文字啦，图片啊，<span>之类的inline属性的标签啦。line boxes只是个考察汇报人员，考察它的手下谁的实际line-height值最高，谁最高，它就要谁的值，然后向上汇报，形成高度。例如，<span style="line-height:20px;">取手下line-height<span style="line-height:40px;">最高</span>的值</span>。则line boxes的高度就是40像素了。
+
+
+- vertical-align中描述的, 父级的基线, 指的是行框的基线吗？（https://www.w3cplus.com/css/css-font-metrics-line-height-and-vertical-align.html）
+
+	关于这个属性的定义参见https://developer.mozilla.org/zh-CN/docs/Web/CSS/vertical-align 。 
+	对于行框的baseline,应该说其是相对固定不变的，判断方法就是这个行框里直接写个字母x,行框的baseline就是x的底部，这个x是不包含在任何其他子标签里面的，行框的baseline永远相对于这个x不变。举个例子<div>x<span>xspan</span></div> 这里div里的行框就是字母x的底部，不是xspan里x的底部。行框里的多个行内框只要是基线对齐的，都会和这个x底部对齐，top bottom会和高度最大的行内框的top bottom对齐。张鑫旭大神讲的幽灵节点就是指这个隐形的x。具体的可以看这个[确定line box的baseline]("https://www.jianshu.com/p/6f9d7da220c8")确定行框的高度是要在对齐之后才能计算到的。行框的高度并不是高度最大的行内框的高度，而是位置最高的行内框的顶部和位置最低的行内框的底部的间距。行内元素的top bottom对齐参照物是高度最大的inline box，而不是行框的顶部或者底部，因为在对齐阶段，行框的高度是没有计算出来的。
+
+
+- 设置元素浮动后，该元素的display值是多少？
+
+		自动变成了 display:block
 
 
 - CSS选择符有哪些？哪些属性可以继承？
@@ -343,9 +409,17 @@
 			8.属性选择器（a[rel = "external"]）
 			9.伪类选择器（a:hover, li:nth-child）
 
-		*   可继承的样式： font-size font-family color, UL LI DL DD DT;
+		不可继承的：display、margin、border、padding、background、height、min-height、max- height、width、min-width、max-width、overflow、position、left、right、top、 bottom、z-index、float、clear、table-layout、vertical-align、page-break-after、 page-bread-before和unicode-bidi
 
-		*   不可继承的样式：border padding margin width height ;
+		所有元素可继承：visibility和cursor
+
+		内联元素可继承：letter-spacing、word-spacing、white-space、line-height、color、font、 font-family、font-size、font-style、font-variant、font-weight、text-decoration、text-transform、direction
+
+		块状元素可继承：text-indent和text-align
+
+		列表元素可继承：list-style、list-style-type、list-style-position、list-style-image
+
+		表格元素可继承：border-collapse
 
 
 
@@ -579,7 +653,7 @@
 
 		方法二：将所有<li>写在同一行。不足：代码不美观。
 
-		方法三：将<ul>内的字符尺寸直接设为0，即font-size: 0。不足：<ul>中的其他字符尺寸也被设为0，需要额外重新设定其他字符尺寸，且在Safari浏览器依然会出现空白间隔。
+		方法三：将<ul>内的字符尺寸直接设为0，即font-size: 0。 ， 然后再设置li元素的font-size为正正常值， 比如14px； 不足：<ul>中的其他字符尺寸也被设为0，需要额外重新设定其他字符尺寸，且在	Safari浏览器依然会出现空白间隔。
 
 		方法四：消除<ul>的字符间隔letter-spacing: -8px，而这也设置了<li>内的字符间隔，因此需要将<li>内的字符间隔设为默认letter-spacing: normal。 (小点：letter-spacing为每个字符之间的空白距离，word-spacing为单词之间的空白距离，)
 
@@ -632,11 +706,7 @@
 
 	如果元素的display为none,那么元素不被渲染,position,float不起作用,如果元素拥有position:absolute;或者position:fixed;属性那么元素将为绝对定位,float不起作用.如果元素float属性不是none,元素会脱离文档流,根据float属性值来显示.有浮动,绝对定位,inline-block属性的元素,margin不会和垂直方向上的其他元素margin折叠.（翻译：外边距用来指定非浮动元素与其周围盒子边缘的最小距离。两个或两个以上的相邻的垂直外边距会被折叠并使用它们之间最大的那个外边距值。多数情况下，折叠垂直外边距可以在视觉上显得更美观，也更贴近设计师的预期。）
 	
-- 对BFC规范(块级格式化上下文：block formatting context)的理解？
 
-		（W3C CSS 2.1 规范中的一个概念,它是一个独立容器，决定了元素如何对其内容进行定位,以及与其他元素的关系和相互作用。）
-		 一个页面是由很多个 Box 组成的,元素的类型和 display 属性,决定了这个 Box 的类型。
-		 不同类型的 Box,会参与不同的 Formatting Context（决定如何渲染文档的容器）,因此Box内的元素会以不同的方式渲染,也就是说BFC内部的元素和外部的元素不会互相影响。
 
 - css定义的权重
 
@@ -798,18 +868,14 @@
 （3）兼容IE可以使用JS辅助一下来解决
 
 - 视差滚动效果，如何给每页做不同的动画？（回到顶部，向下滑动要再次出现，和只出现一次分别怎么做？）
+	https://juejin.im/entry/5975ede7f265da6c322e213f
 
-- ::before 和 :after中双冒号和单冒号 有什么区别？解释一下这2个伪元素的作用。
+- ::before 和 :after中双冒号和单冒号 有什么区别？解释一下这2个伪元素的作用 (https://blog.csdn.net/WinSolstice/article/details/78709323)。
 
-		单冒号(:)用于CSS3伪类，双冒号(::)用于CSS3伪元素。（伪元素由双冒号和伪元素名称组成）
-		双冒号是在当前规范中引入的，用于区分伪类和伪元素。不过浏览器需要同时支持旧的已经存在的伪元素写法，
-		比如:first-line、:first-letter、:before、:after等，
-		而新的在CSS3中引入的伪元素则不允许再支持旧的单冒号的写法。
-
+		单冒号(:)用于CSS3伪类，双冒号(::)用于CSS3伪元素。（伪元素由双冒号和伪元素名称组成） , 这是在CSS3中引入的， 二低版本的浏览器不支持CSS3，所以不支持双冒号，这个时候尽量使用单冒号
 		想让插入的内容出现在其它内容前，使用::before，否者，使用::after；
 		在代码顺序上，::after生成的内容也比::before生成的内容靠后。
 		如果按堆栈视角，::after生成的内容会在::before生成的内容之上
-
 
 - 如何修改chrome记住密码后自动填充表单的黄色背景 ？
 
@@ -819,11 +885,6 @@
 		  color: rgb(0, 0, 0);
 		}
 
-- 你对line-height是如何理解的？
-
-- 设置元素浮动后，该元素的display值是多少？
-
-		自动变成了 display:block
 
 - 怎么让Chrome支持小于12px 的文字？
 
