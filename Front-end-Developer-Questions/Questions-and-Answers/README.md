@@ -228,7 +228,7 @@
 
 		概念 : cookie简单的说就是可以让服务器在客户端的内存或者硬盘里存储少量数据，或者从客户端获取数据的技术， 并且标示用户身份。
 		产生过程 ： 用户通过客户端请求url，访问服务器，服务器响应之后在报头中添加set-cookie，客户端从该头中读取内容并存储下来，之后始终根据同源策略在http请求中携带
-		（同源是指协议、域名、端口三点均相同 ，请求某个域名想要带上某cookie需要同时满足两点才行： 1、这个cookie是该域名或者其父域名下的cookie 2、这个cookie是该路径或者父路径下的路径
+		（同源是指协议、域名、端口三点均相同 ，请求某个域名想要带上某cookie需要同时满足两点才行： 1、这个cookie是该域名或者其父域名下的cookie 2、这个cookie是该路径或者父路径下的cookie
 		参考 https://blog.csdn.net/wang379275614/article/details/53333054）
 		sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存。
 
@@ -240,6 +240,19 @@
 	    	localStorage    存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；
         	sessionStorage  数据在当前浏览器窗口关闭后自动删除。
 			cookie          设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭
+
+
+- 什么是Cookie 隔离？（或者说：请求资源的时候不要让它带cookie怎么做）
+
+		如果静态文件都放在主域名下，那静态文件请求的时候都带有的cookie的数据提交给server的，非常浪费流量，
+		所以不如隔离开。
+
+		因为cookie有域的限制，因此不能跨域提交请求，故使用非主要域名的时候，请求头中就不会带有cookie数据，
+		这样可以降低请求头的大小，降低请求时间，从而达到降低整体请求延时的目的。
+
+		同时这种方式不会将cookie传入Web Server，也减少了Web Server对cookie的处理分析环节，
+		提高了webserver的http请求的解析速度。
+
 
 - iframe有那些缺点？
 
@@ -326,7 +339,21 @@
 
 	https://juejin.im/post/5a7d22636fb9a0633c660359
 
-	在页面中，每个元素被表示为一个矩形的方框，这就是盒子。盒子是CSS布局中的基本单位，一张页面是由一个或多个盒子组成的。盒子从内到外由内容(Content)、内边距(Padding)、边框(Border)和外边距(Margin)组成，盒子的大小由content+padding+border这几部分决定，把margin算进去的那是盒子占据的位置，而不是盒子的大小！  。同时，盒子会为其子孙创建包含块(containing block)，用于计算内部盒子的大小及位置，由元素样式的position属性确定。盒子分为多种类型，在没有CSS干预的情况下，它的类型由元素的类型决定，CSS的display属性能够修改它的类型。
+	在页面中，每个元素被表示为一个矩形的方框，这就是盒子。盒子是CSS布局中的基本单位，一张页面是由一个或多个盒子组成的。盒子从内到外由内容(Content)、内边距(Padding)、边框(Border)和外边距(Margin)组成，盒子的大小由content+padding+border这几部分决定，把margin算进去的那是盒子占据的位置，而不是盒子的大小！  。同时，盒子会为其子孙创建包含块(containing block ， In CSS 2.1, many box positions and sizes are calculated with respect to the edges of a rectangular box called a containing block. In general, generated boxes act as containing blocks for descendant boxes; we say that a box "establishes" the containing block for its descendants. The phrase "a box's containing block" means "the containing block in which the box lives," not the one it generates.)，
+	
+	包含块由以下规则确定：
+
+	The containing block of an element is defined as follows:
+	1. The containing block in which the root element lives is a rectangle called the initial containing block. For continuous media, it has the dimensions of the viewport and is anchored at the canvas origin; it is the page area for paged media. The 'direction' property of the initial containing block is the same as for the root element.
+	2. For other elements, if the element's position is 'relative' or 'static', the containing block is formed by the content edge of the nearest block container ancestor box.
+	3. If the element has 'position: fixed', the containing block is established by the viewport in the case of continuous media or the page area in the case of paged media.
+	4. If the element has 'position: absolute', the containing block is established by the nearest ancestor with a 'position' of 'absolute', 'relative' or 'fixed', in the following way:
+	In the case that the ancestor is an inline element, the containing block is the bounding box around the padding boxes of the first and the last inline boxes generated for that element. In CSS 2.1, if the inline element is split across multiple lines, the containing block is undefined.
+	Otherwise, the containing block is formed by the padding edge of the ancestor.
+
+
+
+	用于计算内部盒子的大小及位置，由元素样式的position属性确定。盒子分为多种类型，在没有CSS干预的情况下，它的类型由元素的类型决定，CSS的display属性能够修改它的类型。
 	
 	按照类型划分盒子分为块级盒子和行级盒子 元素的类型和display属性，决定了这个Box的类型。 不同类型的Box， 会参与不同的Formatting context(一个决定如何渲染文档的容器)，因此Box内的元素会以不同的方式渲染。
 	
@@ -369,9 +396,43 @@
 	BFC内部每个元素的Margin Box的左边都会和包含块的Border Box的左边相接触；在从右往左格式化的情况下，则是每个元素的Margin Box的右边都会和包含块的Border Box的右边相接触；
 
 	BFC在页面上是一个独立的区域，它内部的元素的布局不会和外部元素的布局产生相互影响；
-	
+
 
 - IFC规范的理解 ？ （https://segmentfault.com/a/1190000004466536）
+
+
+
+- absolute的containing block(容器块)计算方式跟正常流有什么不同？
+
+		无论属于哪种，都要先找到其祖先元素中最近的 position 值不为 static 的元素，然后再判断：
+		1、若此元素为 inline 元素，则 containing block 为能够包含这个元素生成的第一个和最后一个 inline box 的 padding box (除 margin, border 外的区域) 的最小矩形；
+		2、否则,则由这个祖先元素的 padding box 构成。
+		如果都找不到，则为 initial containing block。
+
+		补充：
+		1. static(默认的)/relative：简单说就是它的父元素的内容框（即去掉padding的部分）
+		2. absolute: 向上找最近的定位为absolute/relative的元素
+		3. fixed: 它的containing block一律为根元素(html/body)，根元素也是initial containing block
+
+- position:absolute的元素的left 、 top默认值是多少 ？ (https://www.zhihu.com/question/20109535)
+	1、position：absolute中的 left，top的默认值并不是0；
+	2、没有设置left、top时，left和top的默认值将使元素的位置和“原来的位置”一样。
+	3、假设父元素position: relative; 有padding的状态下：如果有top/left:0 ：子元素紧贴父元素padding的边界（因为父元素包含块的边界就是padding边界）如果没有设置值：子元素紧贴父元素	 content的边界（其实此时值为auto）
+
+
+- position的值relative和absolute定位原点是？
+
+		  absolute
+			生成绝对定位的元素，相对于值不为 static的第一个父元素进行定位。
+		  fixed （老IE不支持）
+			生成绝对定位的元素，相对于浏览器窗口进行定位。
+		  relative
+			生成相对定位的元素，相对于其正常位置进行定位。
+		  static
+			默认值。没有定位，元素出现在正常的流中（忽略 top, bottom, left, right z-index 声明）。
+		  inherit
+			规定从父元素继承 position 属性的值。
+
 
 
 - 你对line-height是如何理解的？
@@ -422,6 +483,24 @@
 		表格元素可继承：border-collapse
 
 
+- 说一下 letter-spacing、word-spacing、white-space
+
+	
+		1. white-space 属性设置如何处理元素内的空白 https://blog.csdn.net/qq_33706382/article/details/78328188
+
+			white-space: normal表示合并空格，多个相邻空格合并成一个空格，在源码中的换行作为空格处理，会根据容器的大小进行自动换行 ，不认源码中的换行 ，  认 <br>标签换行  ， 这里的空白是值空白字符，包括空格，制表符等空白字符，下面为了行文方便，统一用“空格”代表。
+
+			white-space:nowrap不换行,和normal一样，也合并空格，但是不会根据容器大小换行 , 不认源码中的换行 ，只认 <br>标签换行, , 同时换行只认源码中的换行和<br/>标签。经常和overflow:hidden,text-overflow:ellipsis一起使用 ; 
+
+			white-space:pre保留空格不换行, 保持源码中的空格，有几个空格算几个空格显示，同时换行只认源码中的换行和<br/>标签。
+
+			white-space:pre-wrap保留空格换行  ，保留空格，并且除了碰到源码中的换行和<br/>会换行外，还会自适应容器的边界进行换行。
+
+			white-space:pre-line合并空格换行 ，合并空格，换行和white-space:pre-wrap一样，遇到源码中的换行和<br/>会换行，碰到容器的边界也会换行。
+
+		2. letter-spacing 控制字符间的留白
+
+		3. word-spacing 控制单词间的留白
 
 - CSS优先级算法如何计算？
 
@@ -530,24 +609,7 @@
 		  inherit     	规定应该从父元素继承 display 属性的值。
 
 
-- position:absolute的元素的left 、 top默认值是多少 ？ (https://www.zhihu.com/question/20109535)
-	1、position：absolute中的 left，top的默认值并不是0；
-	2、没有设置left、top时，left和top的默认值将使元素的位置和“原来的位置”一样。
-	3、假设父元素position: relative; 有padding的状态下：如果有top/left:0 ：子元素紧贴父元素padding的边界（因为父元素包含块的边界就是padding边界）如果没有设置值：子元素紧贴父元素	 content的边界（其实此时值为auto）
 
-
-- position的值relative和absolute定位原点是？
-
-		  absolute
-			生成绝对定位的元素，相对于值不为 static的第一个父元素进行定位。
-		  fixed （老IE不支持）
-			生成绝对定位的元素，相对于浏览器窗口进行定位。
-		  relative
-			生成相对定位的元素，相对于其正常位置进行定位。
-		  static
-			默认值。没有定位，元素出现在正常的流中（忽略 top, bottom, left, right z-index 声明）。
-		  inherit
-			规定从父元素继承 position 属性的值。
 
 - CSS3有哪些新特性？
 
@@ -684,17 +746,6 @@
 		table { border-collapse:collapse; border-spacing:0; }
 
 
-- absolute的containing block(容器块)计算方式跟正常流有什么不同？
-
-		无论属于哪种，都要先找到其祖先元素中最近的 position 值不为 static 的元素，然后再判断：
-		1、若此元素为 inline 元素，则 containing block 为能够包含这个元素生成的第一个和最后一个 inline box 的 padding box (除 margin, border 外的区域) 的最小矩形；
-		2、否则,则由这个祖先元素的 padding box 构成。
-		如果都找不到，则为 initial containing block。
-
-		补充：
-		1. static(默认的)/relative：简单说就是它的父元素的内容框（即去掉padding的部分）
-		2. absolute: 向上找最近的定位为absolute/relative的元素
-		3. fixed: 它的containing block一律为根元素(html/body)，根元素也是initial containing block
 
 - CSS里的visibility属性有个collapse属性值是干嘛用的？在不同浏览器下以后什么区别？
 
@@ -919,20 +970,37 @@
 - overflow: scroll时不能平滑滚动的问题怎么处理？
 
 - 有一个高度自适应的div，里面有两个div，一个高度100px，希望另一个填满剩下的高度。
+	
+	1. height: calc(100%-100px);
 
-- png、jpg、gif 这些图片格式解释一下，分别什么时候用。有没有了解过webp？
+	2. 外层box-sizing: border-box; 同时设置padding: 100px 0 0；
+	
+	   内层100像素高的元素向上移动100像素，这个移动可以使用负margin 或者 absolute定位 ， 具体参见 【test-高度自适应.html】
+	
+	   另一个元素直接height: 100%;
+
+	3. 外层position: relative；	百分百自适应元素直接position: absolute; top: 100px; bottom: 0; left: 0
 
 
-- 什么是Cookie 隔离？（或者说：请求资源的时候不要让它带cookie怎么做）
 
-		如果静态文件都放在主域名下，那静态文件请求的时候都带有的cookie的数据提交给server的，非常浪费流量，
-		所以不如隔离开。
+- png、jpg、gif 这些图片格式解释一下，分别什么时候用。有没有了解过webp？（https://www.zhihu.com/question/20028452）
 
-		因为cookie有域的限制，因此不能跨域提交请求，故使用非主要域名的时候，请求头中就不会带有cookie数据，
-		这样可以降低请求头的大小，降低请求时间，从而达到降低整体请求延时的目的。
+	（1）PNG是无损的、使用索引色的、点阵图。 优点是：。压缩比高，色彩好大多数地方都可以用 (PNG-8用八位二进制数表示一个像素，所以可以有256种颜色，PNG-24用24位二进制表示一个像素，可以有1600万种颜色)
+	
+	（2）JPG是有损的、采用直接色的、点阵图。使用直接色，所以在色调及颜色平滑变化做的不错。 它采用压缩算法，会对图片上每8px*8px的像素进行处理，通过强制渐变的方法来减小文件尺寸
+	
+	（3）GIF是无损的、采用索引色的、点阵图。以8位色重现真色彩的图像。可以实现动画效果
+	
+	（4）WebP是同时支持有损和无损压缩的、使用直接色的、点阵图。 的英文歌谷2010在年推出的图片格式，压缩率只有JPG格式的2/3，大小比PNG小了45％，缺点是压缩的时间更久了 。兼容性不好，目前谷歌和歌剧支持。
 
-		同时这种方式不会将cookie传入Web Server，也减少了Web Server对cookie的处理分析环节，
-		提高了webserver的http请求的解析速度。
+	（5）SVG全称Scalable Vector Graphics，是无损的、矢量图。放大一个SVG图片的时候，你看到的还是线和曲线，而不会出现像素点。这意味着SVG图片在放大时，不会失真，所以它非常适合用来绘制企业Logo、Icon等。
+
+	照片用 JPG。
+	动画用 GIF。
+	Logo、Icon 等小图用 PNG-8。
+	企业logo等用SVG
+	非特殊情况，尽量不要用 PNG-24 和 PNG-32。
+
 
 
 - style标签写在body后与body前有什么区别？
@@ -947,9 +1015,11 @@
 		  是给CSS属性添加浏览器私有前缀，实现跨浏览器兼容性的问题。
 
 
-- rem布局的优缺点
+- rem布局的优缺点 , em 和 rem的区别？ (https://yanhaijing.com/css/2017/09/29/principle-of-rem-layout/)
+	
+	1. em作为font-size的单位时 ， 表示父级字体的大小， 作用在其他属性的时候表示的是自身字体的大小
 
-
+	2. rem作用于非根元素的时候， 相对的是根元素字体的大小 ； rem作用于根元素的时候 ，相对的是初始字体的大小（16px）
 
 
 ## <a name='js'>JavaScript</a>
@@ -2289,32 +2359,6 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 - 最近在学什么？能谈谈你未来3，5年给自己的规划吗？
 
 
-## <a name='web'>前端学习网站推荐</a>
-
-	1. 极客标签：     http://www.gbtags.com/
-
-	2. 码农周刊：     http://weekly.manong.io/issues/
-
-	3. 前端周刊：     http://www.feweekly.com/issues
-
-	4. 慕课网：       http://www.imooc.com/
-
-	5. div.io：		 http://div.io
-
-	6. Hacker News： https://news.ycombinator.com/news
-
-	7. InfoQ：       http://www.infoq.com/
-
-	8. w3cplus：     http://www.w3cplus.com/
-
-	9. Stack Overflow： http://stackoverflow.com/
-
-	10.w3school：    http://www.w3school.com.cn/
-
-	11.mozilla：     https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
-
-
-
 ## <a name='web'>文档推荐</a>
 
 
@@ -2354,8 +2398,3 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 	2016-03-25： 新增ECMAScript6 相关问题
 
 
-### 更新时间:  2018-01-14
-
-	爱机车、爱骑行、爱旅行、爱摄影、爱阅读的前端开发攻城师。
-
-	我的微博：http://weibo.com/920802999
