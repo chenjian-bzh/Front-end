@@ -356,7 +356,7 @@
 	参考阅读：[undefined与null的区别](http://www.ruanyifeng.com/blog/2014/03/undefined-vs-null.html)
 
 
--  写一个通用的事件侦听器函数。
+-  写一个通用的事件侦听器函数。 (https://leohxj.gitbooks.io/front-end-database/javascript-basic/events.html)
 
 			// event(事件)工具集，来源：github.com/markyun
 			markyun.Event = {
