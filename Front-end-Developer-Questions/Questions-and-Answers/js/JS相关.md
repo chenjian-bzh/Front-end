@@ -1,5 +1,6 @@
 ## <a name='js'>JavaScript</a>
 
+#http://javascript.ruanyifeng.com/
 
 -  介绍js的基本数据类型。
 
@@ -41,13 +42,17 @@
     var F = function(){}     //和 var F = new Function(arg1, arg2 ,..., body) 效果是一样的
     var f = new F()
     f.__proto__  === F.prototype   //返回true
+	F.__proto__ === Function.prototype  //返回true , 函数是Function构造器的一个实例
+	Function.prototype.__proto__ === Object.prototype  // Function.prototype 的原型也是 Object.prototype
     F.prototype.__proto__ === Object.prototype  // 返回true
+
 
     var A = {name: 'cj'}
     var a = Object.create(A)  
     var b.__proto__ = A
     a.__proto__ === A  //返回true
     b.__proto__ === a.__proto__  === Object.getPrototypeOf(a) === Object.getPrototypeOf(b)  //返回true
+	A.__proto__ === Object.prototype （对象的最顶层原型总是 Object.prototype）
     
 
     var one = {}
@@ -71,6 +76,32 @@
     所以根据之前的定义， 实例是某个类的具象化， 对象是一组属性的集合， 因此实例都是对象，而对象（比如说Object.prototype， 因为它不是任何类的实例）不全是实例。
     这已经某种程度上解开了鸡和蛋的问题：Object.prototype是对象，但它不是通过Object函数创建的。Object.prototype谁创建的，它是v8引擎（假设用的都是chrome浏览器）按照ECMAScript规范创造的一个对象。
 
+	通俗的理解这几个的关系：
+
+	JavaScript引擎是个工厂。
+	最初，工厂做了一个最原始的产品原型。
+	这个原型叫Object.prototype，本质上就是一组无序key-value存储（{}）
+
+	之后，工厂在Object.prototype的基础上，研发出了可以保存一段“指令”并“生产产品”的原型产品，叫函数。
+	起名为Function.prototype，本质上就是[Function: Empty]（空函数）
+
+	为了规模化生产，工厂在函数的基础上，生产出了两个构造器：
+	生产函数的构造器叫Function，生产kv存储的构造器叫Object。
+
+	你在工厂定制了一个产品，工厂根据Object.prototype给你做了一个Foo.prototype , 相当于产品的原型。
+	然后工厂发现你定制的产品很不错。就在Function.prototype的基础上做了一个Foo的构造器，叫Foo ，相当于产品的生产线 ， 这个生产线根据Foo.prototype这个原型进行生产， 产出Foo的实例对象。
+
+	工厂在每个产品（实例对象）上打了个标签__proto__，以标明这个产品是从哪个原型生产的。
+	为原型打了个标签constructor，标明哪个构造器可以依照这个原型生产产品。
+	为构造器打了标签prototype，标明这个构造器可以从哪个原型生产产品。
+
+	```
+	var F = function(){}
+	F.prototype.constructor.prototype === F.prototype
+	```
+
+	所以，我觉得先有Function还是Object，就看工厂先造谁了。其实先做哪个都无所谓。因为在你定制之前，他们都做好了。
+
 
 
 -  JavaScript有几种类型的值？，你能画一下他们的内存图吗？
@@ -89,7 +120,7 @@
 		* parseFloat('12.3b');
 		* 正则表达式，'12.3b'.match(/(\d)+(\.)?(\d)+/g)[0] * 1, 但是这个不太靠谱，提供一种思路而已。
 
-- 如何将浮点数点左边的数每三位添加一个逗号，如12000000.11转化为『12,000,000.11』?
+- 如何将浮点数点左边的数每三位添加一个逗号，如12000000.11转化为『12,000,000.11』? (http://javascript.ruanyifeng.com/stdlib/regexp.html)
 
 		function commafy(num){
 			return num && num
@@ -156,13 +187,28 @@
 				this.age = 28;
 			}
 			Child.prototype = new Parent();//继承了Parent，通过原型
-
+			Child.prototype.constructor = Child  //这一步的原因参见阮一峰的博客
 			var demo = new Child();
 			alert(demo.age);
 			alert(demo.name);//得到被继承的属性
 
 - JavaScript继承的几种实现方式？
   - 参考：[构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance.html)，[非构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance_continued.html)；
+
+	1、构造函数绑定
+
+	2、prototype继承及其改进方式
+
+	3、拷贝继承
+
+
+
+-  new操作符具体干了什么呢?(https://zhuanlan.zhihu.com/p/23987456?utm_medium=social&utm_source=wechat_session)
+
+	1、创建新对象
+	2、 函数内部的this指向该对象 ，并且属性和方法加入到this引用的对象中 ， 这一步使用了apply ， 函数此时被执行了一遍
+	3、设置该对象的原型对象为构造函数的 prototype
+	4、返回这个新的对象
 
 
 -  javascript创建对象的几种方式？
@@ -177,22 +223,23 @@
 		2、用function来模拟无参的构造函数
 
 			function Person(){}
-			var person=new Person();//定义一个function，如果使用new"实例化",该function可以看作是一个Class
+			var person=new Person();	//定义一个function，如果使用new"实例化",该function可以看作是一个Class
 			person.name="Mark";
 			person.age="25";
 			person.work=function(){
-			alert(person.name+" hello...");
+				alert(person.name+" hello...");
 			}
 			person.work();
+
 
 		3、用function来模拟参构造函数来实现（用this关键字定义构造的上下文属性）
 
 			function Pet(name,age,hobby){
-			   this.name=name;//this作用域：当前对象
-			   this.age=age;
-			   this.hobby=hobby;
-			   this.eat=function(){
-			      alert("我叫"+this.name+",我喜欢"+this.hobby+",是个程序员");
+			   this.name= name;//this作用域：当前对象
+			   this.age= age;
+			   this.hobby= hobby;
+			   this.eat= function(){
+			      alert("我叫"+this.name+", 我喜欢"+this.hobby+",是个程序员");
 			   }
 			}
 			var maidou =new Pet("麦兜",25,"coding");//实例化、创建对象
@@ -214,13 +261,13 @@
 
 			function Dog(){
 
-			 }
-			 Dog.prototype.name="旺财";
-			 Dog.prototype.eat=function(){
-			 alert(this.name+"是个吃货");
-			 }
-			 var wangcai =new Dog();
-			 wangcai.eat();
+			}
+			Dog.prototype.name="旺财";
+			Dog.prototype.eat=function(){
+				alert(this.name+"是个吃货");
+			}
+			var wangcai =new Dog();
+			wangcai.eat();
 
 
 		5、用混合方式来创建
@@ -236,6 +283,10 @@
 			camry.sell();
 
 -  Javascript作用链域?
+
+		(https://leohxj.gitbooks.io/front-end-database/javascript-advance/scope-chain.html),
+		(https://segmentfault.com/a/1190000000533094)
+		(http://www.cnblogs.com/tomxu/archive/2012/01/18/2312463.html)
 
 		全局函数无法查看局部函数的内部细节，但局部函数可以查看其上层的函数细节，直至全局细节。
 		当需要从局部函数查找某一属性或方法时，如果当前作用域没有找到，就会上溯到上层作用域查找，
@@ -478,15 +529,6 @@
 	           alert('yes');
 	       }
 
--  new操作符具体干了什么呢?
-
-			 1、创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型。
-	  	  	 2、属性和方法被加入到 this 引用的对象中。
-	 		 3、新创建的对象由 this 所引用，并且最后隐式的返回 this 。
-
-		var obj  = {};
-		obj.__proto__ = Base.prototype;
-		Base.call(obj);
 
 
 -  用原生JavaScript的实现过什么功能吗？
