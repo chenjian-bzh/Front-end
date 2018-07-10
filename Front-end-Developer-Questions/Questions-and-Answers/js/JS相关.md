@@ -460,9 +460,16 @@
 		 3. ev.stopPropagation();（旧ie的方法 ev.cancelBubble = true;）
 
 
--  什么是闭包（closure），为什么要用它？
+-  什么是闭包（closure），为什么要用它？（https://github.com/dwqs/blog/issues/18）
 
-		闭包是指有权访问另一个函数作用域中变量的函数，创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量,利用闭包可以突破作用链域，将函数内部的变量和方法传递到外部。
+		闭包是指有权访问另外一个函数作用域中的变量的函数
+
+		这概念有点绕，拆分一下。从概念上说，闭包有两个特点：
+
+		1、函数
+		2、能访问另外一个函数作用域中的变量
+
+		创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量,利用闭包可以突破作用链域，将函数内部的变量和方法传递到外部。
 
 		闭包的特性：
 
@@ -582,7 +589,7 @@
 		(5)获取异步调用返回的数据
 		(6)使用JavaScript和DOM实现局部刷新
 
-- Ajax 解决浏览器缓存问题？
+- Ajax 解决浏览器缓存问题？  （https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching?hl=zh-cn）
 
 		1、在ajax发送请求前加上 anyAjaxObj.setRequestHeader("If-Modified-Since","0")。
 
@@ -593,6 +600,64 @@
         4、在URL后面加上时间戳："nowtime=" + new Date().getTime();。
 
         5、如果是使用jQuery，直接这样就可以了 $.ajaxSetup({cache:false})。这样页面的所有ajax都会执行这条语句就是不需要保存缓存记录。
+
+
+-  那些操作会造成内存泄漏？
+
+	内存泄漏指任何对象在您不再拥有或需要它之后仍然存在。
+	垃圾回收器定期扫描对象，并计算引用了每个对象的其他对象的数量。如果一个对象的引用数量为 0（没有其他对象引用过该对象），或对该对象的惟一引用是循环的，那么该对象的内存即可回收。
+
+	1. 错误的全局变量申明
+		
+		```
+			function foo(){
+				bar = 'asdas'
+			}
+			foo()
+		```
+		这段代码执行之后bar成为了全局变量，不会被回收
+
+	2. 数据结构中保有的引用（es6中有了weakmap，可以用来解决这个问题）
+		
+		```
+		var map = {
+			node : document.getElementById('node'),
+			text : document.getElementById('text')
+		}
+		document.body.removeChild(document.getElementById('node'))
+		```
+
+	3. 闭包导致对父级作用域中变量的引用
+
+	4. 被遗忘的构造器或者回调函数
+
+		```
+		var resource = await getData()
+		setInterval(function(){
+			var node = document.getElementById('node')
+			if(node){
+				node.innerHtml = JSON.stringfy(resource)
+			}
+		}, 1000)
+		document.body.removeChild(document.getElementById('node'))
+		```
+
+		node节点销毁后，定时器实际上已经没有用了，但因为没有销毁所以始终保持对resource的引用 ， resource有可能是很大的数据集，造成严重的数据泄露。
+		另外 ， IE6以前的版本不会自动销毁已经不存在的dom节点上绑定的监听器 ， 所以在去除dom节点的时候 ，始终手动接触监听器是一个好的习惯，
+
+		```
+		var element = document.getElementById('button');
+		function onClick(event) {
+			element.innerHtml = 'text';
+		}
+		element.addEventListener('click', onClick);
+		element.removeEventListener('click', onClick);
+		element.parentNode.removeChild(element);
+		```
+
+
+
+        setTimeout 的第一个参数使用字符串而非函数的话，会引发内存泄漏。
 
 -  同步和异步的区别?
 
@@ -639,7 +704,7 @@
 
 	（待完善）
 
--  AMD（Modules/Asynchronous-Definition）、CMD（Common Module Definition）规范区别？
+-  AMD（Modules/Asynchronous-Definition）、CMD（Common Module Definition）规范区别？ (https://www.zhihu.com/question/20351507)
 
 	> AMD 规范在这里：https://github.com/amdjs/amdjs-api/wiki/AMD
 
@@ -670,31 +735,67 @@
 		    // ...
 		})
 
+- seaJs和requireJs的异同 ？ (https://www.douban.com/note/283566440/) （http://www.ruanyifeng.com/blog/2012/11/require_js.html）
 
--  requireJS的核心原理是什么？（如何动态加载的？如何避免多次加载的？如何
-缓存的？）
+- CommonJs 、 UMD 、ES6的模块机制？ 
+
+	(http://javascript.ruanyifeng.com/nodejs/module.html)
+	(https://segmentfault.com/a/1190000004873947)
+	(http://web.jobbole.com/82238/)
+	(http://es6.ruanyifeng.com/#docs/module)
+
+	1. ES6的export语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值。
+	这一点与 CommonJS 规范完全不同。CommonJS 模块输出的是值的缓存，不存在动态更新
+
+	2. CommonJs的require是动态加载（运行时加载），因此可以在表达式、if语句、或者函数中使用， 而es6的import为静态（编译时）加载 ，只能放在顶层，不允许出现在表达式中
+       ```
+	   	if(x === 1){
+			var a = require('./a')
+		}
+	   ```
+	3. CommonJs中的exports是模块自身module的一个属性对象（指向module.exports） ， 在对外暴露接口的时候使用 exports.XXX = YYY 或者 module.exports = XXX 的方式  ； 
+		而ES6中的export和import都是关键字，是命令 ， 对外暴露接口的时候使用 export  var m = 'ASDA'  的方式
+
+
+-  requireJS的作用和核心原理是什么？（如何动态加载的？如何避免多次加载的？如何
+	缓存的？）
+
+		（1）实现js文件的异步加载，避免网页失去响应；
+
+	　　（2）管理模块之间的依赖性，便于代码的编写和维护。
 
 		参考：http://annn.me/how-to-realize-cmd-loader/
 
 -  JS模块加载器的轮子怎么造，也就是如何实现一个模块加载器？
+-  
 
--  谈一谈你对ECMAScript6的了解？
+-  谈一谈你对ECMAScript6的了解？(http://es6.ruanyifeng.com/#docs/module)
 
--  ECMAScript6 怎么写class么，为什么会出现class这种东西?
+	1. 新增模块机制
+	2. 自动采用严格模式， 无论有没有 use strict
+	3. 新增let 、 const
+		let的变量只在块级作用域有效、 禁止变量提升、 出现暂时性死区、不允许重复声明统同名变量
+	4. 支持解构赋值
+	5. 提供了新的原始数据类型 Symbol
+	6. 新增了promise
+	7. 引入了class的概念
+	8. 提供了Proxy、Reflect等新的API
+	9.  新增map 、 set数据结构
+
 
 -  异步加载JS的方式有哪些？
 
-	      (1) defer，只支持IE
+	      (1) defer，只支持IE : <script src='xxxx' defer></script>
 
-	      (2) async：
+	      (2) async：  <script src='xxxx' async='true'></script>
 
 	      (3) 创建script，插入到DOM中，加载完毕后callBack
 
 - documen.write和 innerHTML的区别
 
-		document.write只能重绘整个页面
-
-		innerHTML可以重绘页面的一部分
+	1. write是DOM方法,向文档写入HTML表达式或JavaScript代码，可列出多个参数，参数被顺序添加到文档中 ；innerHTML是DOM属性,设置或返回调用元素开始结束标签之间的HTML元素。
+	2. 两者都可向页面输出内容,innerHTML比document.write更灵活。
+	当文档加载时调用document.write直接向页面输出内容，文档加载结束后调用document.write输出内容会重写整个页面。
 
 - DOM操作——怎样添加、移除、移动、复制、创建和查找节点?
 
@@ -711,37 +812,46 @@
 		  getElementsByTagName()    //通过标签名称
 		  getElementsByName()    //通过元素的Name属性的值(IE容错能力较强，会得到一个数组，其中包括id等于name值的)
 		  getElementById()    //通过元素Id，唯一性
+		  element.querySelector() //匹配指定选择器的第一个元素
+		  element.querySelectorAll()
 
--  .call() 和 .apply() 的区别？
+-  .call() 和 .apply() 和 bind() 的区别？
 
+	1. 三个函数的参数不同：call(obj , arg1 , arg2 , ....) ,  apply(obj , [arg1 , arg2 ,...])  , bind(obj , arg1 ,arg2 ,...) 
+	2. 返回值不同： call 、 apply会使函数立即执行 ， bind是返回一个改变了this指向的函数 ， 并且bind如果传入了函数参数 ， 则会往后排
+    ```
+	function func(a, b, c) {
+		console.log(a, b, c);
+	}
+	var func1 = func.bind(null,'linxin');
 
-		  例子中用 add 来替换 sub，add.call(sub,3,1) == add(3,1) ，所以运行结果为：alert(4);
-
-		  注意：js 中的函数其实是对象，函数名是对 Function 对象的引用。
-
-			function add(a,b)
-			{
-			    alert(a+b);
-			}
-
-			function sub(a,b)
-			{
-			    alert(a-b);
-			}
-
-			add.call(sub,3,1);
-
+	func('A', 'B', 'C');            // A B C
+	func1('A', 'B', 'C');           // linxin A B
+	func1('B', 'C');                // linxin B C
+	func.call(null, 'linxin');      // linxin undefined undefined
+	```
 
 
--  数组和对象有哪些原生方法，列举一下？
+-  数组和对象有哪些原生方法，列举一下？(https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object)
+   
+   1. 数组： forEach \ map \ every \ filter \ find \  some \ splice \ slice \  sort  \ push \  pop \  reverse \ concat \ join
+   
+   2. 对象构造器： Object.keys \ Object.entries \ Object.entries \ Object.freeze \ Object.assign \ Object.create \ Object.getOwnPropertySymbol \ Object.getPrototypeOf  \  Object.defineProperty
+   3. 对象原型 ： Object.prototype.valueOf() \ Object.prototype.hasOwnProperty \ Object.prototype.isProtptypeOf \ Object.prototype.toString
 
--  JS 怎么实现一个类。怎么实例化这个类
+
+- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（http://www.ruanyifeng.com/blog/2012/07/three_ways_to_define_a_javascript_class.html）
+
+
+-  JS 怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
+
+
+-  ECMAScript6 怎么写class么，为什么会出现class这种东西?
+
 
 -  JavaScript中的作用域与变量声明提升？
 
 -  如何编写高性能的Javascript？
-
--  那些操作会造成内存泄漏？
 
 -  JQuery的源码看过吗？能不能简单概况一下它的实现原理？
 
@@ -841,13 +951,7 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 
 -  解释JavaScript中的作用域与变量声明提升？
 
--  那些操作会造成内存泄漏？
 
-	    内存泄漏指任何对象在您不再拥有或需要它之后仍然存在。
-        垃圾回收器定期扫描对象，并计算引用了每个对象的其他对象的数量。如果一个对象的引用数量为 0（没有其他对象引用过该对象），或对该对象的惟一引用是循环的，那么该对象的内存即可回收。
-
-        setTimeout 的第一个参数使用字符串而非函数的话，会引发内存泄漏。
-		闭包、控制台日志、循环（在两个对象彼此引用且彼此保留时，就会产生一个循环）
 
 -  JQuery一个对象可以同时绑定多个事件，这是如何实现的？
 

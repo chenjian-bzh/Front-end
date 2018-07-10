@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var theThing = null; 
+
+        function replaceThing() {
+            var orginalThing = theThing ;
+
+            this.age = 30
+
+            var unused = function(){
+                //if(orginalThing){}
+            }
+
+            theThing = {
+                logStr : new Date().getTime().toString(),
+                someMethod : function(){}
+            }
+        }
+
+        setInterval(replaceThing , 1000)    
+    </script>
+</body>
+</html>
