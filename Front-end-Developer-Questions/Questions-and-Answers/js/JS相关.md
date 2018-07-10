@@ -295,9 +295,9 @@
 -  谈谈This对象的理解。
 
 	```
-  	this总是指向函数的直接调用者（而非间接调用者）；
-	如果有new关键字，this指向new出来的那个对象；
-	在事件中，this指向触发这个事件的对象，特殊的是，IE中的attachEvent中的this总是指向全局对象Window；
+  	在没有箭头函数的情况下，this是动态绑定的，由函数的调用位置决定， 首先如果new调用，即调用了函数构造器，则this指向这个新创建的对象 ； 如果使用了函数对象的call、apply方法，则指向特定的对象 ； 如果是调用了某个对象的方法， 则指向这个对象 ；如果是独立调用，则指向调用位置所在的包含环境对象；
+
+	有箭头函数：箭头函数使得this是词法绑定， 始终指向函数调用位置所在包含环境对象
 	```
 
 -  eval是做什么的？
@@ -529,9 +529,15 @@
 	           alert('yes');
 	       }
 
+- typeof ？ （https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof）
+  
+  返回结果有7 ：string 、number 、boolean 、undefined 、object 、function 、symbol；
+
 
 
 -  用原生JavaScript的实现过什么功能吗？
+
+	ajax方法 https://juejin.im/entry/589921640ce46300560ef894
 
 
 -  Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
@@ -582,7 +588,11 @@
 		(5)获取异步调用返回的数据
 		(6)使用JavaScript和DOM实现局部刷新
 
-- Ajax 解决浏览器缓存问题？
+- Ajax 解决浏览器缓存问题？ 
+
+（https://www.cnblogs.com/lyzg/p/5125934.html）
+
+（https://www.jianshu.com/p/d01ffaa2c426）
 
 		1、在ajax发送请求前加上 anyAjaxObj.setRequestHeader("If-Modified-Since","0")。
 
