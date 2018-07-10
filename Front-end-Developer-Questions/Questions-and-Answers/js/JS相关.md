@@ -846,7 +846,7 @@
 -  JS 怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
 
 
--  ECMAScript6 怎么写class么，为什么会出现class这种东西?
+-  ECMAScript6 怎么写class么，为什么会出现class这种东西? (http://es6.ruanyifeng.com/#docs/class)
 
 
 -  JavaScript中的作用域与变量声明提升？
