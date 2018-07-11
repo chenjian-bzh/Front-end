@@ -297,7 +297,7 @@
 	```
   	在没有箭头函数的情况下，this是动态绑定的，由函数的调用位置决定， 首先如果new调用，即调用了函数构造器，则this指向这个新创建的对象 ； 如果使用了函数对象的call、apply方法，则指向特定的对象 ； 如果是调用了某个对象的方法， 则指向这个对象 ；如果是独立调用，则指向调用位置所在的包含环境对象；
 
-	有箭头函数：箭头函数使得this是词法绑定， 始终指向函数调用位置所在包含环境对象
+	有箭头函数：箭头函数使得this是词法绑定， 始终指向函数调用位置所在包含环境对象, 不再被调用方式影响（call/apply/bind）。
 	```
 
 -  eval是做什么的？
@@ -852,7 +852,9 @@
    3. 对象原型 ： Object.prototype.valueOf() \ Object.prototype.hasOwnProperty \ Object.prototype.isProtptypeOf \ Object.prototype.toString
 
 
-- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（http://www.ruanyifeng.com/blog/2012/07/three_ways_to_define_a_javascript_class.html）
+- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（https://github.com/mqyqingfeng/Blog/issues/15）
+
+- JS继承 ？ （https://github.com/mqyqingfeng/Blog/issues/16） 
 
 
 -  JS 怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
@@ -860,10 +862,18 @@
 
 -  ECMAScript6 怎么写class么，为什么会出现class这种东西? (http://es6.ruanyifeng.com/#docs/class)
 
+	和构造函数有什么区别：
+	1. 类的内部定义的方法是不可枚举的
+	2. 声明类的实例对象必须使用new ， 而构造函数可以直接调用
 
--  JavaScript中的作用域与变量声明提升？
 
--  如何编写高性能的Javascript？
+-  JavaScript中的作用域与变量声明提升？(https://github.com/creeperyang/blog/issues/16)
+
+
+-  如何编写高性能的Javascript？ （http://www.alloyteam.com/2012/11/performance-writing-efficient-javascript/）
+   1. 避免意外和不必要的的全局变变量
+   2. dom元素被销毁时有必要手动解绑监听器
+   3. 必要情况下手动消除引用 
 
 -  JQuery的源码看过吗？能不能简单概况一下它的实现原理？
 
@@ -1019,18 +1029,20 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		  (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"
 
 
-- What is a Polyfill?
+- What is a Polyfill 和 shim的区别 ?
 
 		polyfill 是“在旧版浏览器上复制标准 API 的 JavaScript 补充”,可以动态地加载 JavaScript 代码或库，在不支持这些标准 API 的浏览器中模拟它们。
 		例如，geolocation（地理位置）polyfill 可以在 navigator 对象上添加全局的 geolocation 对象，还能添加 getCurrentPosition 函数以及“坐标”回调对象，
 		所有这些都是 W3C 地理位置 API 定义的对象和函数。因为 polyfill 模拟标准 API，所以能够以一种面向所有浏览器未来的方式针对这些 API 进行开发，
 		一旦对这些 API 的支持变成绝对大多数，则可以方便地去掉 polyfill，无需做任何额外工作。
 
+		polyfill 是 shim 的一种。shim 是将不同 api 封装成一种，比如 jQuery 的 $.ajax 封装了 XMLHttpRequest 和 IE 用 ActiveXObject 方式创建 xhr 对象；polyfill 特指 shim 成的 api 是遵循标准的，其典型做法是在IE浏览器中增加 window.XMLHttpRequest ，内部实现使用 ActiveXObject。在实际中为了方便做对比，会特指 shim 的 api 不是遵循标准的，而是自己设计的。
+
 - 做的项目中，有没有用过或自己实现一些 polyfill 方案（兼容性处理方案）？
 
-		比如： html5shiv、Geolocation、Placeholder
+		比如： html5shiv 、Geolocation 、Placeholder
 
-- 我们给一个dom同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
+- 我们给一个dom 和 它的父级dom 同时绑定两个点击事件，一个用捕获，一个用冒泡。会执行几次事件，会先执行冒泡还是捕获？
 
 
 - 使用JS实现获取文件扩展名？
@@ -1043,7 +1055,7 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		对于'filename'和'.hiddenfile'，lastIndexOf的返回值分别为0和-1无符号右移操作符(»>) 将-1转换为4294967295，将-2转换为4294967294，这个方法可以保证边缘情况时文件名不变。
 		String.prototype.slice() 从上面计算的索引处提取文件的扩展名。如果索引比文件名的长度大，结果为""。
 
-- Webpack热更新实现原理?
+- Webpack热更新实现原理? (https://zhuanlan.zhihu.com/p/30623057)
 
 		1. Webpack编译期，为需要热更新的 entry 注入热更新代码(EventSource通信)
 		2. 页面首次打开后，服务端与客户端通过 EventSource 建立通信渠道，把下一次的 hash 返回前端
@@ -1051,6 +1063,7 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		4. 修改页面代码后，Webpack 监听到文件修改后，开始编译，编译完成后，发送 build 消息给客户端
 		5. 客户端获取到hash，成功后客户端构造hot-update.js script链接，然后插入主文档
 		6. hot-update.js 插入成功后，执行hotAPI 的 createRecord 和 reload方法，获取到 Vue 组件的 render方法，重新 render 组件， 继而实现 UI 无刷新更新。
+
 
 - 请介绍一下JS之事件节流？
 

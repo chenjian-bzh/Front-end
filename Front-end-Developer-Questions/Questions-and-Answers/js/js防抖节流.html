@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html , body{
+            height: 100%;
+            
+        }
+    </style>
+</head>
+<body>
+    <div style='height:300% ; width:100% ;background-color:gray'></div>
+    <script>
+        /** */
+        function debounce(realfunc , time){
+            var timeout = null
+            return function(){
+                clearTimeout(timeout)
+                timeout = setTimeout(() => {
+                    realfunc()
+                }, time);
+                //或者
+                // if(!timeout){
+                //     timeout = setTimeout(() => {
+                //         realfunc()
+                //         clearTimeout(timeout)
+                //         timeout = null
+                //     }, time);
+                // }
+            }
+        }
+
+        function realFun(){
+            console.log('realfunc')
+        } 
+        
+        document.addEventListener('scroll' , debounce(realFun , 1000))
+        // document.addEventListener('scroll' , function(){
+        //     console.log("1")
+        // })
+    </script>
+</body>
+</html>

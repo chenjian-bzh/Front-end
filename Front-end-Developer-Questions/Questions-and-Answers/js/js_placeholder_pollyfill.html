@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <!-- 不推荐 -->
+        <input value='test' onfocus="javascript:if(this.value=='test'){this.value=''}" onblur="javascript:if(this.value==''){this.value='test'}">
+
+        <input id='ptest' placeholderTest='test'>
+
+    </div>
+
+    <script>
+        /*原生js*/
+        function initDom(element){
+           var pstr = ''
+           if(element && !('placeholderTest' in document.createElement('input')) && (pstr = element.getAttribute('placeholderTest'))){
+
+               element.onfocus = function(){
+                   if(this.value === pstr){
+                        this.value = ''
+                   }
+                   this.style.color = ''
+               }
+
+               element.onblur = function(){
+                   if(this.value === ''){
+                       this.value = pstr
+                       this.style.color = 'gray'
+                   }
+               }
+
+               element.value = pstr
+               element.style.color = 'gray'
+           }
+        }
+
+        /*Jquery http://www.fedlab.tech/archives/1483.html*/
+        
+        initDom(document.getElementById('ptest'))
+    </script>
+</body>
+</html>
