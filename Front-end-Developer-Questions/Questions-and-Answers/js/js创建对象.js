@@ -41,15 +41,42 @@ console.log(this.name);                 // undefined ， 如果不用安全模�
 console.log(this.age);                  // undefined ， 如果不用安全模式这里返回 age的值
 
 
-/**原型方式 */
 
-  //实例属性写在构造函数里
-function Animal(name){
-    this.name = name
+/**寄生构造函数模式 */
+function Person2(name , age){
+    var obj = new Object()
+    obj.name = name
+    obj.age = age
+    return obj
 }
-  //共享属性和方法放在原型上
-Animal.prototype.age = 12 
+var person2 = new Person2('drfg', 12)
+console.log(person2 instanceof Object) //true
+console.log(person2 instanceof Person2) //false
+
+
+
+/**原型方式 */
+function Animal(name , age){
+    this.name = name
+    this.age = age
+}
 Animal.prototype.sayHello = function(){}
+
+var animal = new Animal('sfdfg' ,12)
+
+
+/**动态原型方式 */
+function Animal2(name , age){
+    this.name = name 
+    this.age = age
+    if(typeof this.getName != 'function' ){
+        Animal2.prototype.getName = function(){
+            return this.name
+        }
+        return new Animal2(name , age)
+    }
+}
+
 
 
 /**Object.create方法 */

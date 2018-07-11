@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+     <div id='parent' style='position:fixed; bottom:10px'>
+         <button id='child'>test</button>
+     </div>
+     <script>
+         var parent = document.getElementById('parent')
+         var child = document.getElementById('child')
+        
+         parent.addEventListener('click', function(){
+             console.log('bubble' , 'parent')
+         } , false)
+
+         parent.addEventListener('click', function(){
+             console.log('capture' , 'parent')
+         } , true)
+
+         
+
+         child.addEventListener('click' , function(){
+             console.log('capture' , 'child')
+         } , true)
+
+         child.addEventListener('click' , function(){
+             console.log('bubble' , 'child')
+         } , false)
+
+         document.body.addEventListener('click' , function(){
+             console.log('bubble' , 'body')
+         } , false)
+
+         document.body.addEventListener('click' , function(){
+             console.log('capture' , 'body')
+         } , true)
+        
+         /*
+         点击后的输出为：
+            capture parent
+            capture child
+            bubble child
+            bubble parent
+         如果给同一个事件绑定多个处理函数 ，不论是冒泡还是捕获阶段触发 ， 先绑定的先执行 ,
+         绑定在被点击元素的事件是按照代码顺序发生，其他元素通过冒泡或者捕获“感知”的事件，按照W3C的标准，
+         先发生捕获事件，后发生冒泡事件。
+         所有事件的顺序是：其他元素捕获阶段事件 -> 本元素代码顺序事件 -> 其他元素冒泡阶段事件 。
+         */
+         
+     </script>
+</body>
+</html>

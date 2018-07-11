@@ -132,6 +132,7 @@
 - 介绍一下你对浏览器内核的理解？
 
 		主要分成两部分：渲染引擎(layout engineer或Rendering Engine)和JS引擎。
+
 		渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入CSS等），以及计算网页的显示方式，然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同，所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其它需要编辑、显示网络内容的应用程序都需要内核。
 
 		JS引擎则：解析和执行javascript来实现网页的动态效果。
@@ -170,15 +171,14 @@
 		  	 可以利用这一特性让这些浏览器支持HTML5新标签，
           	 浏览器支持新标签后，还需要添加标签默认的样式。
 
-		     当然也可以直接使用成熟的框架、比如html5shim;   
+		     当然也可以直接使用成熟的框架、比如html5shiv;   
 			 <!--[if lt IE 9]>
-				<script> src="http://html5shim.googlecode.com/svn/trunk/html5.js"</script>
+				<script> src="http://html5shiv.googlecode.com/svn/trunk/html5.js"</script>
 			 <![endif]-->
 
 			 (条件注释只有IE浏览器 且 只有IE10以下的浏览器可以识别， 为了识别IE10\IE11，可以参考http://www.webhek.com/post/conditional-comments-in-ie11-10.html)
 
 		* 如何区分HTML5： DOCTYPE声明\新增的结构元素\功能元素
-
 
 - 简述一下你对HTML语义化的理解？
 
