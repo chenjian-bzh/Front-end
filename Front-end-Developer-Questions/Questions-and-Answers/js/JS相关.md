@@ -205,9 +205,9 @@
 
 -  new操作符具体干了什么呢?(https://zhuanlan.zhihu.com/p/23987456?utm_medium=social&utm_source=wechat_session)
 
-	1、创建新对象
-	2、 函数内部的this指向该对象 ，并且属性和方法加入到this引用的对象中 ， 这一步使用了apply ， 函数此时被执行了一遍
-	3、设置该对象的原型对象为构造函数的 prototype
+	1、创建新对象 obj
+	2、设置该对象的原型对象为构造函数的 prototype
+	3、Person.apply(obj)  (函数内部的this指向新对象 ，并且属性和方法加入到this引用的对象中 ， 这一步使用了apply ， 函数此时被执行了一遍)
 	4、返回这个新的对象
 
 
@@ -852,7 +852,10 @@
    3. 对象原型 ： Object.prototype.valueOf() \ Object.prototype.hasOwnProperty \ Object.prototype.isProtptypeOf \ Object.prototype.toString
 
 
-- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（http://www.ruanyifeng.com/blog/2012/07/three_ways_to_define_a_javascript_class.html）
+- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（https://github.com/mqyqingfeng/Blog/issues/15）
+
+
+- JS继承？ （https://github.com/mqyqingfeng/Blog/issues/16）
 
 
 -  JS 怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
@@ -860,6 +863,7 @@
 
 -  ECMAScript6 怎么写class么，为什么会出现class这种东西? (http://es6.ruanyifeng.com/#docs/class)
 
+	class是prototype的语法糖
 
 -  JavaScript中的作用域与变量声明提升？
 

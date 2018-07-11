@@ -22,7 +22,7 @@ console.log(cat2.name ,cat2.age , cat2.makeSound())
 
 /**构造函数方式 */
 function Person(name , age){
-    //安全模式，防止用户忘了写new
+    //安全模式
     if(this instanceof Person){
         this.name = name 
         this.age = age
@@ -42,11 +42,12 @@ console.log(this.age);                  // undefined ， 如果不用安全模�
 
 
 /**原型方式 */
-//实例属性写在构造函数里
+
+  //实例属性写在构造函数里
 function Animal(name){
     this.name = name
 }
-//共享属性和方法放在原型上
+  //共享属性和方法放在原型上
 Animal.prototype.age = 12 
 Animal.prototype.sayHello = function(){}
 
