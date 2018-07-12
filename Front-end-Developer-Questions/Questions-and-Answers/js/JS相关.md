@@ -205,9 +205,9 @@
 
 -  new操作符具体干了什么呢?(https://zhuanlan.zhihu.com/p/23987456?utm_medium=social&utm_source=wechat_session)
 
-	1、创建新对象
-	2、 函数内部的this指向该对象 ，并且属性和方法加入到this引用的对象中 ， 这一步使用了apply ， 函数此时被执行了一遍
-	3、设置该对象的原型对象为构造函数的 prototype
+	1、创建新对象 obj
+	2、设置该对象的原型对象为构造函数的 prototype
+	3、Person.apply(obj)  (函数内部的this指向新对象 ，并且属性和方法加入到this引用的对象中 ， 这一步使用了apply ， 函数此时被执行了一遍)
 	4、返回这个新的对象
 
 

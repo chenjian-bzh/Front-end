@@ -22,7 +22,7 @@ console.log(cat2.name ,cat2.age , cat2.makeSound())
 
 /**构造函数方式 */
 function Person(name , age){
-    //安全模式，防止用户忘了写new
+    //安全模式
     if(this instanceof Person){
         this.name = name 
         this.age = age
