@@ -1065,9 +1065,8 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		6. hot-update.js 插入成功后，执行hotAPI 的 createRecord 和 reload方法，获取到 Vue 组件的 render方法，重新 render 组件， 继而实现 UI 无刷新更新。
 
 
-- 请介绍一下JS之事件节流？
+- 请介绍一下JS之事件防抖和节流？
 
-- 什么是JS的函数防抖？
 
 #### <a name='other'>ECMAScript6 相关</a>
 
@@ -1081,7 +1080,53 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 
  		Object.is 应被认为有其特殊的用途，而不能用它认为它比其它的相等对比更宽松或严格。
 
-- ES6是如何实现编译成ES5的？
+
+- ES6是如何实现编译成ES5的？ （https://zhuanlan.zhihu.com/p/27289600）
+
+    Babel的编译过程跟绝大多数其他语言的编译器大致同理，分为三个阶段：
+
+	1. 解析：将代码字符串解析成抽象语法树
+		1. 分词：将整个代码字符串分割成 语法单元 数组（语法单元：语法单元是被解析语法当中具备实际意义的最小单元）
+		2. 语义分析：在分词结果的基础之上分析 语法单元之间的关系 （就是把词汇进行立体的组合，确定有多重意义的词语最终是什么意思、多个词语之间有什么关系以及又应该再哪里断句等。）
+
+	2. 变换：对抽象语法树进行变换操作
+
+	3. 再建：根据变换后的抽象语法树再生成代码字符串
+
+	像我们在.babelrc里配置的presets和plugins都是在第2步工作的。
+
+- babel的用法？ （http://coderlt.coding.me/2017/05/02/babel-readme/）
+
+	1. babel是广泛使用的ES6转码器，将ES6代码装换为ES5
+	
+	2. 视情况安装babel-cli 、 babel-core 、 babel-loader、babel-preset-env 、babel-preset-2015、babel-preset-stage-2、babel-plugin-transform-runtime 、 babel-polyfill等包，然后根目录添加.babelrc文件, 这个文件是必须的， 无论是安装了babel-cli在命令行中转码还是通过webpack的babel-loader转码， 都依赖这个文件
+	```
+	{
+		"plugins": ["transform-runtime","transform-vue-jsx","transform-decorators-legacy"],
+		"presets": [
+			"env",
+			"stage-2"
+		]
+	}
+	```
+
+	3. 如果某些代码需要调用Babel的API进行转码，就要使用babel-core模块。
+	var es6Code = 'let x = n => n + 1';
+	var es5Code = require('babel-core').transform(es6Code, {
+		presets: ['es2015']
+	})
+	.code;
+
+	4. Babel默认只转换新的JavaScript句法（syntax），比如解构赋值、class 、 let和const ,而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。	举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。
+
+	5. transtorm-runtime 是为了减少重复代码而生的。 babel生成的代码，可能会用到一些_extend()， classCallCheck() 之类的工具函数，默认情况下，这些工具函数的代码会包含在编译后的文件中。如果存在多个文件，那每个文件都有可能含有一份重复的代码。并且用了transtorm-runtime 就可以不用 babel-polyfill 了
+
+	6. stage-0 、stage-1 、stage-2 、stage-3用来支持es7的一些新的特性 ， 根据es7不同阶段的语法提案分成四个阶段，使用时选装一个 ， 0是最高级 ，包含的插件最多
+		比如双冒号代替bind
+		```
+		obj::func()  等价于 func.bind(obj)
+		```
+
 
 - css-loader的原理？
 

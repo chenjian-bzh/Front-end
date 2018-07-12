@@ -8,30 +8,19 @@
     <title>Document</title>
     <style>
         html , body{
-            height: 100%;
-            
+            height: 100%;    
         }
     </style>
 </head>
 <body>
     <div style='height:300% ; width:100% ;background-color:gray'></div>
     <script>
-        /** */
+        /**防抖函数 */
         function debounce(realfunc , time){
             var timeout = null
             return function(){
                 clearTimeout(timeout)
-                timeout = setTimeout(() => {
-                    realfunc()
-                }, time);
-                //或者
-                // if(!timeout){
-                //     timeout = setTimeout(() => {
-                //         realfunc()
-                //         clearTimeout(timeout)
-                //         timeout = null
-                //     }, time);
-                // }
+                timeout = setTimeout(realfunc, time);
             }
         }
 
@@ -39,10 +28,28 @@
             console.log('realfunc')
         } 
         
-        document.addEventListener('scroll' , debounce(realFun , 1000))
-        // document.addEventListener('scroll' , function(){
-        //     console.log("1")
-        // })
+       // document.addEventListener('scroll' , debounce(realFun , 1000))
+        
+
+        /**节流函数 */
+        function throttle(func, wait, mustrun){
+            let timeout,
+                startTime = new Date().getTime();
+            return function() {
+                let context = this
+                let args = arguments
+                let curTime = new Date().getTime()
+                clearTimeout(timeout)
+                if(curTime - startTime > mustrun){
+                    func.apply(context , args)
+                    startTime = curTime
+                }else{
+                    timeout = setTimeout(func, wait);
+                }
+            }
+        }
+
+        document.addEventListener('scroll' , throttle(realFun , 1000 , 600))
     </script>
 </body>
 </html>
