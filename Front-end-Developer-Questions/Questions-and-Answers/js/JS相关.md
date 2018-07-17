@@ -404,7 +404,7 @@
 					if (ev.stopPropagation) {
 						ev.stopPropagation();
 					} else {
-						ev.cancelBubble = true;
+						ev.canccancelBubble = true;
 					}
 				},
 				// 取消事件的默认行为
@@ -594,6 +594,11 @@
 		(4)发送HTTP请求
 		(5)获取异步调用返回的数据
 		(6)使用JavaScript和DOM实现局部刷新
+
+- 说下web缓存？ （https://segmentfault.com/a/1190000006741200）
+
+	
+
 
 - Ajax 解决浏览器缓存问题？ 
 
