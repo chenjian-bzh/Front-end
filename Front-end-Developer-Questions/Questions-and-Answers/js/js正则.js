@@ -1,4 +1,4 @@
-
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions
 
 /** test()测试当前匹配规则是否能匹配参考字符串 ， 返回布尔类型*/
 let ret = /cat/.test("dog and cat .")
@@ -95,7 +95,9 @@ console.log('组匹配测试 $n： ' , 'hello world'.replace(/(\w*)\s(\w*)/ , '$
 
 //replace相处首尾两端的空格
 console.log('消除空格:' , '  helloworld  '.replace(/^\s+|$\s+/ , ''))
-
+console.log('消除空格:' , '  helloworld  '.replace(/(\s*)(\w*)(\s*)/ , function(match , $1 , $2){
+    return $2
+}))
 //字符串的replace 实现 数字添加逗号分隔
 function commmay(num){
     return num && num
@@ -113,7 +115,7 @@ var prices = {
     'p3': '$5.00'
   };
   
-  var template = '<span id="p1"></span>'
+var template = '<span id="p1"></span>'
     + '<span id="p2"></span>'
     + '<span id="p3"></span>';
   

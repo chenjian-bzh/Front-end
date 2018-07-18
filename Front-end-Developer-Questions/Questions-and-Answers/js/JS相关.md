@@ -439,7 +439,7 @@
 -  ["1", "2", "3"].map(parseInt) 答案是多少？
 
 		parseInt() 函数能解析一个字符串，并返回一个整数，需要两个参数 (val, radix)，
-		其中 radix 表示要解析的数字的基数。【该值介于 2 ~ 36 之间，并且字符串中的数字不能大于radix才能正确返回数字结果值】;
+		其中 radix 表示要解析的数字的基数。【该值介于 2 ~ 36 之间，并且字符串中的数字不能大于radix才能正确返回数字结果值】; 省略该参数或其值为 ‘0‘，则数字将以 10 为基础来解析
 		但此处 map 传了 3 个 (element, index, array),我们重写parseInt函数测试一下是否符合上面的规则。
 
 		function parseInt(str, radix) {
@@ -531,10 +531,10 @@
 
 -  如何判断一个对象是否属于某个类？
 
- 		  使用instanceof （待完善）
-	       if(a instanceof Person){
-	           alert('yes');
-	       }
+		使用instanceof （待完善）
+		if(a instanceof Person){
+			alert('yes');
+		}
 
 - typeof ？ （https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof）
   
@@ -544,7 +544,11 @@
 
 -  用原生JavaScript的实现过什么功能吗？
 
-	ajax方法 https://juejin.im/entry/589921640ce46300560ef894
+	1. ajax方法封装， 支持jsonp请求 https://juejin.im/entry/589921640ce46300560ef894
+	2. placeholder的pollfill方案
+	3. 全屏滚动
+	4. Tabs
+	5. CSS Wave
 
 
 -  Javascript中，有一个函数，执行时对象查找时，永远不会去查找原型，这个函数是？
@@ -579,7 +583,7 @@
 
 -  js延迟加载的方式有哪些？
 
-		defer和async、动态创建DOM方式（用得最多）、按需异步载入js
+		defer和async、动态创建DOM方式（用得最多）、按需异步载入js； defer保证脚本执行顺序和声明顺序一样 ，但是async不保证
 
 
 -  Ajax 是什么? 如何创建一个Ajax？
@@ -595,9 +599,15 @@
 		(5)获取异步调用返回的数据
 		(6)使用JavaScript和DOM实现局部刷新
 
-- 说下web缓存？ （https://segmentfault.com/a/1190000006741200）
+- 说下web缓存？ （https://segmentfault.com/a/1190000006741200）（http://imweb.io/topic/5795dcb6fb312541492eda8c）
 
-	
+	1. 强缓存
+    http1.0时代只有pragma和Expires ， 当pragma字段值为no-cache的时候（事实上现在RFC中也仅标明该可选值），会知会客户端不要对该资源读缓存，即每次都得向服务器发一次请求才行。并且pragma优先于Expires
+
+	2. 协商缓存
+
+	3. CDN缓存
+
 
 
 - Ajax 解决浏览器缓存问题？ 
@@ -676,23 +686,8 @@
 
         setTimeout 的第一个参数使用字符串而非函数的话，会引发内存泄漏。
 
--  同步和异步的区别?
-
-	同步的概念应该是来自于OS中关于同步的概念:不同进程为协同完成某项工作而在先后次序上调整(通过阻塞,唤醒等方式).同步强调的是顺序性.谁先谁后.异步则不存在这种顺序性.
 
 
-
-	同步：浏览器访问服务器请求，用户看得到页面刷新，重新发请求,等请求完，页面刷新，新内容出现，用户看到新内容,进行下一步操作。
-
-	异步：浏览器访问服务器请求，用户正常操作，浏览器后端进行请求。等请求完，页面不刷新，新内容也会出现，用户看到新内容。
-
-
-
-	（待完善）
-
--  如何解决跨域问题?
-
-		jsonp、 iframe、window.name、window.postMessage、服务器上设置代理页面
 
 -  页面编码和被请求的资源编码如果不一致如何处理？
 
@@ -804,7 +799,7 @@
 
 	      (1) defer，只支持IE : <script src='xxxx' defer></script>
 
-	      (2) async：  <script src='xxxx' async='true'></script>
+	      (2) async：  <script src='xxxx' async></script>
 
 	      (3) 创建script，插入到DOM中，加载完毕后callBack
 
@@ -884,7 +879,6 @@
 
 -  jQuery.fn的init方法返回的this指的是什么对象？为什么要返回this？
 
--  jquery中如何将数组转化为json字符串，然后再转化回来？
 
 -  jQuery 的属性拷贝(extend)的实现原理是什么，如何实现深拷贝？
 
@@ -907,8 +901,6 @@
 
 -  jQuery 是通过哪个方法和 Sizzle 选择器结合的？（jQuery.fn.find()进入Sizzle）
 
--  针对 jQuery性能的优化方法？
-
 -  Jquery与jQuery UI 有啥区别？
 
 
@@ -918,7 +910,6 @@
          提供了一些常用的界面元素，诸如对话框、拖动行为、改变大小行为等等
 
 
--  JQuery的源码看过吗？能不能简单说一下它的实现原理？
 
 -  jquery 中如何将数组转化为json字符串，然后再转化回来？
 
@@ -1080,10 +1071,9 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		两等号判等，会在比较时进行类型转换；
 		三等号判等(判断严格)，比较时不进行隐式类型转换,（类型不同则会返回false）；
 
-		Object.is 在三等号判等的基础上特别处理了 NaN 、-0 和 +0 ，保证 -0 和 +0 不再相同，
-		但 Object.is(NaN, NaN) 会返回 true.
-
- 		Object.is 应被认为有其特殊的用途，而不能用它认为它比其它的相等对比更宽松或严格。
+		Object.is(value1, value2) 在三等号判等的基础上特别处理了 NaN 、-0 和 +0 ，保证 -0 和 +0 不再相同，
+		Object.is(NaN, NaN) 会返回 true ， NaN===NaN返回false
+		Object.is(+0, -0) 会返回 false ， +0===-0返回false
 
 
 - ES6是如何实现编译成ES5的？ （https://zhuanlan.zhihu.com/p/27289600）

@@ -242,28 +242,6 @@
 			cookie          设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭
 
 
-- 什么是Cookie 隔离？（或者说：请求资源的时候不要让它带cookie怎么做）
-
-		如果静态文件都放在主域名下，那静态文件请求的时候都带有的cookie的数据提交给server的，非常浪费流量，
-		所以不如隔离开。
-
-		因为cookie有域的限制，因此不能跨域提交请求，故使用非主要域名的时候，请求头中就不会带有cookie数据，
-		这样可以降低请求头的大小，降低请求时间，从而达到降低整体请求延时的目的。
-
-		同时这种方式不会将cookie传入Web Server，也减少了Web Server对cookie的处理分析环节，
-		提高了webserver的http请求的解析速度。
-
-
-- iframe有那些缺点？
-
-		*iframe会阻塞主页面的Onload事件；
-		*搜索引擎的检索程序无法解读这种页面，不利于SEO;
-
-		*iframe和主页面共享连接池，而浏览器对相同域的连接有限制，所以会影响页面的并行加载。
-
-        使用iframe之前需要考虑这两个缺点。如果需要使用iframe，最好是通过javascript
-        动态给iframe添加src属性值，这样可以绕开以上两个问题。
-
 - Label的作用是什么？是怎么用的？
 
 		label标签来定义表单控制间的关系,当用户选择该标签时，浏览器会自动将焦点转到和标签相关的表单控件上。
@@ -278,30 +256,7 @@
 		给不想要提示的 form 或某个 input 设置为 autocomplete=off。
 		(http://www.w3school.com.cn/html5/att_input_autocomplete.asp)
 
-- 如何实现浏览器内多个标签页之间的通信? (阿里)
-		（https://segmentfault.com/a/1190000007615884）
-		（https://segmentfault.com/q/1010000006664804）
-		(http://web.jobbole.com/82225/)
 
-		WebSocket、SharedWorker；
-		也可以调用localstorge、cookies等本地存储方式；
-
-		localstorge另一个浏览上下文里被添加、修改或删除时，它都会触发一个"storage"事件，
-		我们通过监听事件，控制它的值来进行页面信息通信；
-		注意quirks：Safari 在无痕模式下设置localstorge值时会抛出 QuotaExceededError 的异常；
-
-- webSocket如何兼容低浏览器？(阿里)
-
-		Adobe Flash Socket 、
-		ActiveX HTMLFile (IE) 、
-		基于 multipart 编码发送 XHR 、
-		基于长轮询的 XHR
-
-- 页面可见性（Page Visibility API） 可以有哪些用途？
-
-		通过 visibilityState 的值检测页面当前是否可见，以及打开网页的时间等;
-		在页面被切换到其他后台进程的时候，自动暂停音乐或视频的播放；
-		https://developer.mozilla.org/zh-CN/docs/Web/API/Document/visibilityState
 
 - 如何在页面上实现一个圆形的可点击区域？ https://www.nowcoder.com/questionTerminal/fe155273580e46dfa2b15875e94a8b96
 
@@ -1028,54 +983,7 @@
 	element ： height: 2.1rem;
 	webapp开发原则： 文字流式，控件弹性，图片等比缩放。
 
-- 三次握手 ， 四次挥手
 
-	https://github.com/jawil/blog/issues/14
-
-- 浏览器加载、渲染页面的过程？
-
-	https://github.com/jawil/blog/issues/9
-
-
-- 平时怎么解决跨域的。以及后续JSONP的原理和实现以及cors怎么设置。
-
-  1、跨域发生的条件有三个： 浏览器发出的请求（不允许跨域是浏览器的限制）、请求的url跨域了（协议、域名、端口任意一个不同）、发出的ajax请求
-
-  2、针对上面说的三个条件 ， 有不同的解决办法
-
-	 1. 设置浏览器允许跨域， 比如chrome disable-web-secure
-
-	 2. 避免出现跨域 ， 设置服务器允许跨域，比如spring可以给方法加上@crossorigin注解 ， 并且在方法中返回相应的响应头。
-
-	 3. 
-		这个和请求的类型有关 ，简单请求是先请求后判断， 即允许发送请求，带上	origin ， 如果服务器响应了并且在 access-control-allow-orgin/access-control-allow-method中表明允许跨域，则正常显示 ； 否则报错（虽然此时已经返回了数据 ，在控制台可以看到，但不会显示） 。
-
-		复杂请求则是先发送一条options请求 ， 如果服务器返回允许， 则再发送正常请求 ， 否则报错。
-
-  3、避免请求的type为xhr ， 即不用ajax ，而用script支持跨域的特性， 这就是jsonp技术
-	
-	<button id="btn">click</button>
-	<script type="text/javascript">
-		function $(str){
-			return document.getElementById(str)
-		}
-		function CreateScript(src) {
-			var Scrip=document.createElement('script');
-			Scrip.src=src;
-			document.body.appendChild(Scrip);
-		}
-		function jsonpcallback(json) {
-				console.log(json);//Object { email="中国", email2="中国222"}
-		}
-		$('btn').onclick=function(){
-			CreateScript("http://localhost:51335/somejson?callback=jsonpcallback")    
-		}
-	</script>
-				
-
-	备注：简单请求指的是 get、post请求 ， 并且无自定义头，并且content-type为text/plain 、 multipart/form-data 、application/x-www-from-urlencoded之一的ajax请求；
-
-		  复杂请求指的是 delete、put请求 ， 或者有自定义头 ， 或者 content-type为 application/json的ajax请求
 
 
 
