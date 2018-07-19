@@ -995,6 +995,9 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 
 - 如何测试前端代码么? 知道BDD, TDD, Unit Test么? 知道怎么测试你的前端工程么(mocha, sinon, jasmin, qUnit..)?
 
+	https://gist.github.com/KevinHu-1024/027595cb7799cbddcb8c89db22bdfa7b
+	
+
 - 前端templating(Mustache, underscore, handlebars)是干嘛的, 怎么用?
 
 - 简述一下 Handlebars 的基本用法？
@@ -1012,6 +1015,7 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		            return $1 + ",";
 		        });
 		}
+		
 		console.log(commafy(1234567.90)); //1,234,567.90
 
 
@@ -1046,6 +1050,16 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 		function getFileExtension(filename) {
 		  return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
 		}
+
+		function getFileExtension(filename) {
+		  let index =  filename.lastIndexOf(".")
+		  if(index === -1){
+			  return ""
+		  }else{
+			  return filename.slice(index)
+		  }
+		}
+		
 
 		String.lastIndexOf() 方法返回指定值（本例中的'.'）在调用该方法的字符串中最后出现的位置，如果没找到则返回 -1。
 		对于'filename'和'.hiddenfile'，lastIndexOf的返回值分别为0和-1无符号右移操作符(»>) 将-1转换为4294967295，将-2转换为4294967294，这个方法可以保证边缘情况时文件名不变。
