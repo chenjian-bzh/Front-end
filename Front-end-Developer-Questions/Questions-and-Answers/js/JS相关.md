@@ -35,7 +35,7 @@
     2. 函数： 标准内置构造器Function的一个实例 ， 除了可以包含属性， 还可以包含可执行代码
     3. 对象： 属性的集合， 有一个原型对象， 该原型对象可以是空值
     4. 原型： 为其他对象提供共享属性的对象， 当构造函数创建一个对象时，为了该对象共享其属性， 会给该对象一个隐藏的属性_proto_指向其原型prototype , 通过构造器的prototype属性或者生成的          对象的_proto_可以取到这个原型对象
-    5. prototype： 只有函数才有prototype(原型)属性。为什么只有函数才有prototype属性？ECMAScript规范就这么定的。prototype对象是实现面向对象的一个重要机制。每个函数也是一个实例对象，它们对应 的类就是Function，每个函数对象都具有一个子对象prototype。prototype 表示了该函数的原型，prototype表示了一个类的属性的集合。当通过new来生成一个类的对象时，prototype对象的属性就会成为实例化对象的属性。
+    5. prototype： 只有函数才有prototype(原型)属性 , 这个是在函数声明的时候由js引擎生成的一个空对象，只包含了constructor和__proto__属性。prototype对象是实现面向对象的一个重要机制。每个函数也是一个实例对象，它们对应 的类就是Function，每个函数对象都具有一个子对象prototype。prototype 表示了该函数的原型，prototype表示了一个类的属性的集合。当通过new来生成一个类的对象时，prototype对象的属性就会成为实例化对象的属性。
     6. __proto__: 每个js对象都有一个原型对象 ，从这个原型对象那继承属性和方法 ， _proto_就是对象和它的原型对象建立连接的乔梁
 
     ```
@@ -208,79 +208,44 @@
 	1、创建新对象 obj
 	2、设置该对象的原型对象为构造函数的 prototype
 	3、Person.apply(obj)  (函数内部的this指向新对象 ，并且属性和方法加入到this引用的对象中 ， 这一步使用了apply ， 函数此时被执行了一遍)
-	4、返回这个新的对象
+	4、返回这个新的对象 (如果函数return了一个对象类型的结果 ， 即typeof 为 object， 则不会返回这个新对象)
 
 
 -  javascript创建对象的几种方式？
 
-		javascript创建对象简单的说,无非就是使用内置对象或各种自定义对象，当然还可以用JSON；但写法有很多种，也能混合使用。
+	1. var a = {name:'cj'}
+
+	2. var a = new Object({name:'cj'})
+
+	3. var A = function(){this.name = 'cj'}
+		var A = new A()
+		
+	4. var A = {name:'cj'}
+		var a = Object.create(A) 
 
 
-		1、对象字面量的方式
-
-			person={firstname:"Mark",lastname:"Yun",age:25,eyecolor:"black"};
-
-		2、用function来模拟无参的构造函数
-
-			function Person(){}
-			var person=new Person();	//定义一个function，如果使用new"实例化",该function可以看作是一个Class
-			person.name="Mark";
-			person.age="25";
-			person.work=function(){
-				alert(person.name+" hello...");
-			}
-			person.work();
+- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（https://github.com/mqyqingfeng/Blog/issues/15）
 
 
-		3、用function来模拟参构造函数来实现（用this关键字定义构造的上下文属性）
+- JS继承 ？ （https://github.com/mqyqingfeng/Blog/issues/16） 
 
-			function Pet(name,age,hobby){
-			   this.name= name;//this作用域：当前对象
-			   this.age= age;
-			   this.hobby= hobby;
-			   this.eat= function(){
-			      alert("我叫"+this.name+", 我喜欢"+this.hobby+",是个程序员");
-			   }
-			}
-			var maidou =new Pet("麦兜",25,"coding");//实例化、创建对象
-			maidou.eat();//调用eat方法
-
-
-		4、用工厂方式来创建（内置对象）
-
-			 var wcDog =new Object();
-			 wcDog.name="旺财";
-			 wcDog.age=3;
-			 wcDog.work=function(){
-			   alert("我是"+wcDog.name+",汪汪汪......");
-			 }
-			 wcDog.work();
+	1. 原型链继承
+	   	缺点是：所有实例都共享原型上的属性 ， 且构造时无法给父级传参
+	2. 构造函数继承
+		缺点是：所有实例都会构建一遍方法
+	3. 组合继承
+		克服了前两种的缺点，但是父级构造器会调用两次
+	4. 原型继承（类似于Object.create）
+		缺点：和原型链继承方式一样
+	4. 寄生式继承
+	 	在原型继承基础上 ，对对象做了功能增强
+	5. 寄生组合式继承
+		在组合继承的基础上改进，避免父级构造函数执行两次
 
 
-		5、用原型方式来创建
-
-			function Dog(){
-
-			}
-			Dog.prototype.name="旺财";
-			Dog.prototype.eat=function(){
-				alert(this.name+"是个吃货");
-			}
-			var wangcai =new Dog();
-			wangcai.eat();
+-  JS怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
 
 
-		5、用混合方式来创建
-
-			function Car(name,price){
-			  this.name=name;
-			  this.price=price;
-			}
-			 Car.prototype.sell=function(){
-			   alert("我是"+this.name+"，我现在卖"+this.price+"万元");
-			  }
-			var camry =new Car("凯美瑞",27);
-			camry.sell();
 
 -  Javascript作用链域?
 
@@ -494,7 +459,6 @@
 			            })(i);
 			}
 		</script>
-
 
 
 		执行say667()后,say667()闭包内部变量会存在,而闭包内部函数的内部变量不会存在
@@ -852,12 +816,6 @@
    3. 对象原型 ： Object.prototype.valueOf() \ Object.prototype.hasOwnProperty \ Object.prototype.isProtptypeOf \ Object.prototype.toString
 
 
-- JS创建对象的方法 ？ （https://blog.csdn.net/xi_2130/article/details/50110493）（https://github.com/mqyqingfeng/Blog/issues/15）
-
-- JS继承 ？ （https://github.com/mqyqingfeng/Blog/issues/16） 
-
-
--  JS 怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
 
 
 -  ECMAScript6 怎么写class么，为什么会出现class这种东西? (http://es6.ruanyifeng.com/#docs/class)
@@ -996,7 +954,7 @@ jQuery中没有提供这个功能，所以你需要先编写两个jQuery的扩�
 - 如何测试前端代码么? 知道BDD, TDD, Unit Test么? 知道怎么测试你的前端工程么(mocha, sinon, jasmin, qUnit..)?
 
 	https://gist.github.com/KevinHu-1024/027595cb7799cbddcb8c89db22bdfa7b
-	
+
 
 - 前端templating(Mustache, underscore, handlebars)是干嘛的, 怎么用?
 
