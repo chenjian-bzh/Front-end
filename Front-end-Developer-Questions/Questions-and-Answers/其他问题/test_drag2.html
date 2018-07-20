@@ -1,0 +1,55 @@
+
+<!-- 
+    实现图片回收站功能
+    https://github.com/hanzichi/hanzichi.github.io/blob/9cfd35b5009c0b259f4e50abefbf3980f46ad5f3/2015/drag-and-drop/index.htm 
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+            span{
+                width: 200px;
+                height: 100px;
+                display: inline-block;
+                vertical-align: top;
+                border: 1px black solid;
+            }
+            .dustbin{
+                width: 200px;
+                height: 100px;
+                border: 1px black solid;
+            }
+    </style>
+
+</head>
+<body>
+        <span id='sp0'><img src='./1.png' draggable="true" id='img1' /></span>
+        <span id='sp1'><img src='./2.png' draggable="true" id='img2' /></span>
+        <div class='dustbin'>
+            回收站
+        </div>
+        <script>
+            let imgs = document.querySelectorAll('img')
+            for(let i=0;i<imgs.length;i++){
+                let item = imgs[i]
+                item.ondragstart = function(e){
+                    e.dataTransfer.setData('id' , e.target.id)
+                }
+            }
+
+            let dustbin = document.getElementsByClassName('dustbin')[0]
+            dustbin.ondragover = function(e){
+                e.preventDefault();
+            }
+            dustbin.ondrop = function(e){
+                let node = document.getElementById(e.dataTransfer.getData('id'))
+                node.parentNode.removeChild(node)
+            }
+        </script>
+</body>
+</html>

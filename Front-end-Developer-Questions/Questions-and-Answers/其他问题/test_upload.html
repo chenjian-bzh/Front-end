@@ -1,0 +1,72 @@
+<!-- 
+    实现图片拖曳上传预览的功能
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        span{
+            width: 200px;
+            height: 100px;
+            display: inline-block;
+            vertical-align: top;
+            border: 1px black solid;
+            margin-right:20px;
+        }
+    </style>
+</head>
+<body>
+    <span id='sp1'></span>
+    <span id='sp2'></span>
+
+    <script>
+        let sp1 = document.getElementById('sp1')
+        let sp2 = document.getElementById('sp2')
+
+        // 使用FileReader的实例完成预览
+        sp1.ondragover = function(e){
+            e.preventDefault()
+        }
+
+        sp1.ondrop = function(e){
+            e.stopPropagation()
+            e.preventDefault()
+            let file = e.dataTransfer.files[0]
+            
+            let reader = new FileReader()
+            reader.onload = function(_event){
+                let img = document.createElement('img')
+                img.src = _event.target.result
+                img.style.height = '100%'
+                img.style.width = '100%'
+                e.target.appendChild(img)
+            }
+            reader.readAsDataURL(file)
+        }
+
+        //使用URL的方法完成预览
+        sp2.ondragover = function(e){
+            e.preventDefault()
+        }
+
+        sp2.ondrop = function(e){
+            e.stopPropagation()
+            e.preventDefault()
+            let file = e.dataTransfer.files[0]
+            let imgurl = window.URL.createObjectURL(file)
+            let img = document.createElement('img')
+            img.src = imgurl
+            img.style.height = '100%'
+            img.style.width = '100%'
+            e.target.appendChild(img)
+        }
+
+
+    </script>
+</body>
+</html>
