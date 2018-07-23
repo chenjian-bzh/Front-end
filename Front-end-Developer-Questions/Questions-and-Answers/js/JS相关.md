@@ -495,10 +495,27 @@
 -  `[].forEach.call($$("*"),function(a){a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16)})` 能解释一下这段代码的意思吗？
 
 
--  js延迟加载的方式有哪些？
+-  js延迟加载的方式有哪些？（https://www.ibm.com/developerworks/cn/web/1308_caiys_jsload/index.html）
 
-		defer和async、动态创建DOM方式（用得最多）、按需异步载入js； defer保证脚本执行顺序和声明顺序一样 ，但是async不保证
+	1. defer和async、动态创建DOM方式（用得最多）、按需异步载入js； 
+	2. defer的加载不阻塞页面渲染， 并且遇到defer标签的script就开始加载， 只是暂时不执行，等到页面所有元素加载完毕之后才执行， 并且是在window.onload事件之前执行，按照顺序执行,所以下面代码的输出是:script > defer > load
+   	```
+	   <script type="text/javascript" defer>
+			alert("defer");
+		</script>
+		<script type="text/javascript">
+			alert("script");
+		</script>
+		<script type="text/javascript">
+			window.onload = function(){
+				alert("load");
+			};
+		</script>
+	```
+	3. async的加载也不阻塞页面渲染，只是下载完毕之后就执行， 而不是等待页面加载完毕，所以不能保证执行的顺序
 
+
+- window.onload事件和jquery的document.ready()的区别？（https://www.jianshu.com/p/c572a7675c29）
 
 -  Ajax 是什么? 如何创建一个Ajax？
 
@@ -726,14 +743,6 @@
 	8. 提供了Proxy、Reflect等新的API
 	9.  新增map 、 set数据结构
 
-
--  异步加载JS的方式有哪些？
-
-	      (1) defer，只支持IE : <script src='xxxx' defer></script>
-
-	      (2) async：  <script src='xxxx' async></script>
-
-	      (3) 创建script，插入到DOM中，加载完毕后callBack
 
 - documen.write和 innerHTML的区别
 

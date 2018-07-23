@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var script = document.createElement ("script")
+        script.type = "text/javascript";
+        
+        //测试src属性加载时机
+        script.onload = function(){
+            console.log("1")
+            alert("Script loaded!");
+        };
+        console.log("2")
+        script.src = "js_trunk函数.js";
+        console.log("3")
+        document.getElementsByTagName("head")[0].appendChild(script);
+        console.log("4")
+
+
+        //测试text属性加载时机
+        script.text = 'console.log("this is script")'
+        console.log('before append')
+        document.body.appendChild(script)
+        console.log('after append')
+
+
+
+    </script>
+</body>
+</html>
