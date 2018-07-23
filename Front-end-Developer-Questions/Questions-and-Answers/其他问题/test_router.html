@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div{
+            height: 100px;
+            width:100px;
+        }
+    </style>
+</head>
+<body>
+    <span><a href='#home'>home</a></span>
+    <span><a href='#about'>about</a></span>
+    <div id='box'></div>
+    <script>
+        let Router = function(){
+            this.routes = {}
+            this.currentUrl = ''
+        }
+
+        Router.prototype.route = function(route , callback){
+            this.routes[route] = callback || function(){}
+        }
+
+        Router.prototype.refresh = function(){
+            this.currentUrl = location.hash.slice(1) || '/'
+            this.routes[this.currentUrl] && this.routes[this.currentUrl]()
+        }
+
+        Router.prototype.init = function() {
+            window.addEventListener('load' , this.refresh.bind(this) , false)
+            window.addEventListener('hashchange', this.refresh.bind(this), false)
+        }
+
+        window.router = new Router()
+        window.router.init()
+
+        router.route('home', function(){
+            document.getElementById('box').innerHTML = 'this is home'
+        })
+
+        router.route('about', function(){
+            document.getElementById('box').innerHTML = 'this is about'
+        })
+    </script>
+</body>
+</html>

@@ -170,36 +170,6 @@
 			})
 			console.log(arr);
 
--  Javascript如何实现继承？
-
-		1、构造继承
-		2、原型继承
-		3、实例继承
-		4、拷贝继承
-
-		原型prototype机制或apply和call方法去实现较简单，建议使用构造函数与原型混合方式。
-		
-			function Parent(){
-				this.name = 'wang';
-			}
-
-			function Child(){
-				this.age = 28;
-			}
-			Child.prototype = new Parent();//继承了Parent，通过原型
-			Child.prototype.constructor = Child  //这一步的原因参见阮一峰的博客
-			var demo = new Child();
-			alert(demo.age);
-			alert(demo.name);//得到被继承的属性
-
-- JavaScript继承的几种实现方式？
-  - 参考：[构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance.html)，[非构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance_continued.html)；
-
-	1、构造函数绑定
-
-	2、prototype继承及其改进方式
-
-	3、拷贝继承
 
 
 
@@ -241,6 +211,16 @@
 	 	在原型继承基础上 ，对对象做了功能增强
 	5. 寄生组合式继承
 		在组合继承的基础上改进，避免父级构造函数执行两次
+
+
+- JavaScript继承的几种实现方式？
+  - 参考：[构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance.html)，[非构造函数的继承](http://www.ruanyifeng.com/blog/2010/05/object-oriented_javascript_inheritance_continued.html)；
+
+	1、构造函数绑定
+
+	2、prototype继承及其改进方式
+
+	3、拷贝继承
 
 
 -  JS怎么实现一个类。怎么实例化这个类 （https://blog.csdn.net/xi_2130/article/details/50276025）
@@ -427,57 +407,26 @@
 
 -  什么是闭包（closure），为什么要用它？（https://github.com/dwqs/blog/issues/18）
 
-		闭包是指有权访问另外一个函数作用域中的变量的函数
+	闭包是指有权访问另外一个函数作用域中的变量的函数 ； 外层函数执行完，它的变量理应全部销毁，但因为闭包的存在，之后执行此内部函数，通过它仍能访问到外层函数的变量，这就是闭包的特点。 而它本质源于，内部函数创建时，会保存当前环境的作用域链（内部属性[[__scope__]]中），且函数被保留下来，引擎不会对外层环境的变量对象进行销毁。 创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量,利用闭包可以突破作用链域，将函数内部的变量和方法传递到外部。
 
-		这概念有点绕，拆分一下。从概念上说，闭包有两个特点：
+	这概念有点绕，拆分一下。从概念上说，闭包有两个特点：
 
-		1、函数
-		2、能访问另外一个函数作用域中的变量
-
-		创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量,利用闭包可以突破作用链域，将函数内部的变量和方法传递到外部。
-
-		闭包的特性：
-
-		1.函数内再嵌套函数
-		2.内部函数可以引用外层的参数和变量
-		3.参数和变量不会被垃圾回收机制回收
-
-		//li节点的onclick事件都能正确的弹出当前被点击的li索引
-		 <ul id="testUL">
-	        <li> index = 0</li>
-	        <li> index = 1</li>
-	        <li> index = 2</li>
-	        <li> index = 3</li>
-	    </ul>
-		<script type="text/javascript">
-		  	var nodes = document.getElementsByTagName("li");
-			for(i = 0;i<nodes.length;i+= 1){
-			    nodes[i].onclick = (function(i){
-			              return function() {
-			                 console.log(i);
-			              } //不用闭包的话，值每次都是4
-			            })(i);
-			}
-		</script>
+	1. 函数
+	2. 能访问另外一个函数作用域中的变量
 
 
-		执行say667()后,say667()闭包内部变量会存在,而闭包内部函数的内部变量不会存在
-		使得Javascript的垃圾回收机制GC不会收回say667()所占用的资源
-		因为say667()的内部函数的执行需要依赖say667()中的变量
-		这是对闭包作用的非常直白的描述
-
-		  function say667() {
-			// Local variable that ends up within closure
-			var num = 666;
-			var sayAlert = function() {
-				alert(num);
-			}
-			num++;
-			return sayAlert;
-		}
-
-		 var sayAlert = say667();
-		 sayAlert()//执行结果应该弹出的667
+	闭包的作用：
+	1. 实现私有变量
+	2. 改变函数的参数个数，把多参数的函数改成单参数的函数
+	 ```
+	 function make_pow2(n){
+		 return function(x){
+			 return math.pow(x,n)
+		 }
+	 }
+	 let pow2 = make_pow(2)
+	 let result = pow2(10)
+	 ```
 
 
 -  javascript 代码中的"use strict";是什么意思 ? 使用它区别是什么？
@@ -511,6 +460,7 @@
 	1. ajax方法封装， 支持jsonp请求 https://juejin.im/entry/589921640ce46300560ef894
 	2. placeholder的pollfill方案
 	3. 全屏滚动
+	   父元素设置100vh高度，overflow为hidden； 若干个子元素设置100vh高度，设置css属性transition：transform 1s， 给父元素绑定wheel事件，通过e.deltaY判断上下滚动，然后给子元素设置transform:translateY（-200%）这样的属性 ； 如果是触屏，给父元素绑定touchstart和touchmove事件，通过e.clientY比较是否滚动
 	4. Tabs
 	5. CSS Wave
 
@@ -713,11 +663,10 @@
 
 - seaJs和requireJs的异同 ？ (https://www.douban.com/note/283566440/) （http://www.ruanyifeng.com/blog/2012/11/require_js.html）
 
-- CommonJs 、 UMD 、ES6的模块机制？ 
+- CommonJs 、 UMD 、ES6模块机制？ 
 
 	(http://javascript.ruanyifeng.com/nodejs/module.html)
 	(https://segmentfault.com/a/1190000004873947)
-	(http://web.jobbole.com/82238/)
 	(http://es6.ruanyifeng.com/#docs/module)
 
 	1. ES6的export语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值。
@@ -750,7 +699,26 @@
 	1. 新增模块机制
 	2. 自动采用严格模式， 无论有没有 use strict
 	3. 新增let 、 const
-		let的变量只在块级作用域有效、 禁止变量提升、 出现暂时性死区、不允许重复声明统同名变量
+		1. let、const的变量只在块级作用域有效、 
+		2. 禁止变量提升
+			```
+			// var 的情况
+			console.log(foo); // 输出undefined
+			var foo = 2;
+
+			// let 的情况
+			console.log(bar); // 报错ReferenceError
+			let bar = 2;
+			```
+		3. 出现暂时性死区
+			```
+			var tmp = 123;
+			if (true) {
+				tmp = 'abc'; // ReferenceError
+				let tmp;
+			}
+			```
+		4. 不允许重复声明统同名变量
 	4. 支持解构赋值
 	5. 提供了新的原始数据类型 Symbol
 	6. 新增了promise
@@ -820,12 +788,43 @@
 
 -  ECMAScript6 怎么写class么，为什么会出现class这种东西? (http://es6.ruanyifeng.com/#docs/class)
 
+	类实际上是原型构造器组合方式生成对象的语法糖 ， class中的constructor相当于构造器， class中定义的方法实际上是挂在prototype上的， 相当于原型链构造，所以说他是一个语法糖。
+	```
+		class A{
+			constructor(){
+				this.name='cj'
+			}
+
+			func(){}
+		}
+		//等效于
+		function B(){
+			this.name='cj'
+		}
+		B.prototype.func = function(){}
+
+		//只是类中的方法是不可枚举的
+		Object.keys(A.prototype) 返回[]
+		Object.getOwnPropertyNames(A.prototype) 返回['func']
+
+		Object.keys(B.prototype) 返回['func']
+		Object.keys(Object.getOwnPropertyNames(B.prototype)) 返回['func' , 'constructor']
+	```
+
 	和构造函数有什么区别：
 	1. 类的内部定义的方法是不可枚举的
 	2. 声明类的实例对象必须使用new ， 而构造函数可以直接调用
 
 
 -  JavaScript中的作用域与变量声明提升？(https://github.com/creeperyang/blog/issues/16)
+
+	首先js中一个变量名进入上下文有四种方式，按照顺序依次是：
+	1. language defined , 所有的函数作用域都会有this、arguments两个变量，全局作用域没有arguments
+	2. formal parameters（形参） ， 函数有形参， 形参会添加到函数作用域里
+	3. function declarations（函数声明） ， 以函数声明形式，比如function foo(){}
+	4. variable declarations（变量声明） ， 包括函数表达式
+
+	函数声明和变量声明会提前到函数最前面， 并且函数声明总是在前面， 而且提前打印的话函数声明是可以打印出来的 ， 而变量声明打印的是undefined
 
 
 -  如何编写高性能的Javascript？ （http://www.alloyteam.com/2012/11/performance-writing-efficient-javascript/）

@@ -38,6 +38,7 @@
 		首先：CSS规范规定，每个元素都有display属性，确定该元素的类型，每个元素都有默认的display值，如div的display默认值为“block”，则为“块级”元素；span默认display属性值为“inline”，是“行内”元素。
 
 		（1）行内元素有：a b span img input select strong（强调的语气）
+
 		（2）块级元素有：div ul ol li dl dt dd h1 h2 h3 h4…p
 
 		（3）常见的空元素：
@@ -390,15 +391,7 @@
 
 		3. word-spacing 控制单词间的留白
 
-- CSS优先级算法如何计算？
 
-		*   优先级就近原则，同权重情况下样式定义最近者为准;
-		*   载入样式以最后载入的定位为准;
-
-		优先级为:
-			同权重: 内联样式表（标签内部）> 嵌入样式表（当前文件中）> 外部样式表（外部文件中）。
-			!important >  id > class > tag
-			important 比 内联优先级高
 
 - CSS3新增伪类有那些？
 
@@ -646,6 +639,15 @@
 	如果元素的display为none,那么元素不被渲染,position,float不起作用,如果元素拥有position:absolute;或者position:fixed;属性那么元素将为绝对定位,float不起作用.如果元素float属性不是none,元素会脱离文档流,根据float属性值来显示.有浮动,绝对定位,inline-block属性的元素,margin不会和垂直方向上的其他元素margin折叠.（翻译：外边距用来指定非浮动元素与其周围盒子边缘的最小距离。两个或两个以上的相邻的垂直外边距会被折叠并使用它们之间最大的那个外边距值。多数情况下，折叠垂直外边距可以在视觉上显得更美观，也更贴近设计师的预期。）
 	
 
+- CSS优先级算法如何计算？
+
+		*   优先级就近原则，同权重情况下样式定义最近者为准;
+		*   载入样式以最后载入的定位为准;
+
+		优先级为:
+			同权重: 内联样式表（标签内部）> 嵌入样式表（当前文件中）> 外部样式表（外部文件中）。
+			!important >  id > class > tag
+			important 比 内联优先级高
 
 - css定义的权重
 
@@ -856,6 +858,7 @@
 		移除空格、使用margin负值、使用font-size:0、letter-spacing、word-spacing
 
 - overflow: scroll时不能平滑滚动的问题怎么处理？
+
 
 - 有一个高度自适应的div，里面有两个div，一个高度100px，希望另一个填满剩下的高度。
 	

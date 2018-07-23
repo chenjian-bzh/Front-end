@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div{
+            height: 100px;
+            width:100px;
+        }
+    </style>
+</head>
+<body>
+        <span><a href='home' title='this is home'>home</a></span>
+        <span><a href='about' title='this is about'>about</a></span>
+        <div id='box'></div>
+        <script>
+            let elems = document.querySelectorAll('a')
+            let box = document.getElementById('box')
+
+            for (let index = 0; index < elems.length; index++) {
+                const element = elems[index];
+                element.addEventListener('click' , function(e){
+                    e.preventDefault()
+                    let item = e.target
+                    let title = item.title
+                    let path = item.href
+                    history.pushState({path:path, title:title} , title , path)
+                })
+            }
+
+            window.addEventListener('popstate' , function(e){
+                let state = e.state
+                console.log(state);
+                box.innerHTML = state.title
+            })
+        </script>
+</body>
+</html>
