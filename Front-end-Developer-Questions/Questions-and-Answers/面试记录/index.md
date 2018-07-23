@@ -2,10 +2,55 @@
 
     extract-text-webpack-plugin
 
-- 有读过vue或者react的源码吗？ 现在用的什么版本的Vue ， 知道Vue1和Vue2的区别吗？
+- 有读过vue或者react的源码吗？ 现在用的什么版本的Vue ， 知道Vue1和Vue2的区别吗？(https://cn.vuejs.org/v2/guide/migration.html)
 
+    1. 
+    vue.js1.0
+    create -> beforeCompile -> compiled -> ready -> beforeDestroy -> destroyed
+
+    vuejs2.0
+    beforeCreate -> created -> beforeMount -> mounted -> beforeUpdate -> updated -> beforeDestroy -> destroyed
+
+    2. 
+    去除$dispatch与$broadcast
+    使用emit与on的方法
+
+    
+    3. 绑定一次
+    {{*msg}}
+    <div v-once>{{msg}}</div>
+    vue2.0已废弃 请使用v-once
+
+    4. 绑定html代码
+    {{{msg}}}
+    <div v-html="msg"></div>
+    {{{msg}}}写法vue2.0已废弃,请使用v-html
+
+    5. 循环v-for
+    数组
+    1.0默认通过value进行遍历(key,value),遍历需加track-by="$index"(不加重复数据不绑定)
+
+    2.0通过key进行遍历(value,key)
+
+    ```
+    data:{
+    arr:['苹果','橘子','香蕉']
+    }
+    <ul>
+    <li v-for="value in arr">
+        {{value}} {{$index}}
+    </li>
+    </ul>
+    ```
+    {{{$index}}}写法vue2.0已废弃
 
 - Vue组件间通信的方式 ？ 兄弟节点间怎么通信 ？
+
+    1. provide/inject 可以让祖先组件向所有后代组件注入依赖，有点像react的上下文
+
+    2. 通过 v-on 在子组件上绑定方法 ， 子组件中通过 this.$emit()去触发
+
+    3. 事件广播的形式
   
 
 - 数组扁平化能想到几种方法？ (https://github.com/mqyqingfeng/Blog/issues/36)
@@ -13,7 +58,11 @@
    递归 、toString 、 reduce 、 扩展运算符
 
 
-- 数据库读写分离是什么？ 主从数据库? 分库分表呢？ 
+- 数据库读写分离是什么？ 主从数据库? 分库分表呢？   （https://blog.csdn.net/justdb/article/details/17331569）
+
+
+- 数据一致性?
+
 
 - 重放攻击 ， CSRF攻击说一下
 
@@ -81,7 +130,7 @@
 - 说一下你项目中的权限设计？
   
 
-- SPA应用第一次加载获取打包文件太多如何优化？ 如何异步加载？
+- SPA应用第一次加载获取打包文件太多如何优化？ 如何异步加载？ （https://blog.csdn.net/ligang2585116/article/details/80170539）
   
 
 - 知道async ， await的原理吗？了解Generator吗 
