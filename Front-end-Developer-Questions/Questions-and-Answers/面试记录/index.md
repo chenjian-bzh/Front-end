@@ -1,32 +1,50 @@
-- webpack熟悉吗? 抽取css的插件是什么？
+- webpack熟悉吗? 抽取css的插件是什么？还有什么其他常用的插件？
 
-    extract-text-webpack-plugin
+    1. extract-text-webpack-plugin(https://webpack.docschina.org/plugins/extract-text-webpack-plugin)
+    2. commonsChunkPlugin (https://webpack.docschina.org/guides/code-splitting/#%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D-prevent-duplication-)
+    3. HashedModuleIdsPlugin：使用comonsChunkPlugin将代码分割成应用代码和公共代码代码的时候，为了保持应用代码修改不影响公共代码的文件hash，需要用到这个插件（https://webpack.docschina.org/plugins/commons-chunk-plugin/）
+
+- webpack 优化方法 ？ （https://zy108830.gitbooks.io/webpack-doc/content/optimization.html）
+
+   1. 通过entry、output配置实现代码分离 ， 并用commonChunkPlugin防止代码重复
+   2. 通过import()异步加载建立分割点，实现动态加载 ； 并且通过new webpack.optimize.LimitChunkCountPlugin({maxChunks: 15})和new webpack.optimize.MinChunkSizePlugin({minChunkSize: 10000})来防止因为分割点过多导致生成太多细小的模块
+   3. 分割公共代码和应用代码
+   4. 抽取css到单独的文件
+   5. vue或者react都有自己的延迟加载机制，比如vue的路由懒加载
+
+
+- SPA应用第一次加载获取打包文件太多如何优化？ 如何异步加载？(https://webpack.docschina.org/guides/code-splitting/#%E5%8A%A8%E6%80%81%E5%AF%BC%E5%85%A5-dynamic-imports-) （https://router.vuejs.org/zh/guide/advanced/lazy-loading.html）
+- (https://webpack.docschina.org/guides/lazy-loading/#%E6%A1%86%E6%9E%B6)
+
+    1. 可以使用webpack的code spliting功能， 将代码分割，并且搭配commonsChunkPlugin抽取公共代码， 这样可以分成几个打包文件 ， 减小bundle的大小。
+    2. 比如Vue， 结合Vue的异步组件和webpack的code spliting完成路由懒加载
+
 
 - 有读过vue或者react的源码吗？ 现在用的什么版本的Vue ， 知道Vue1和Vue2的区别吗？(https://cn.vuejs.org/v2/guide/migration.html)
 
     1. 
-    vue.js1.0
+    vuejs1.0
     create -> beforeCompile -> compiled -> ready -> beforeDestroy -> destroyed
 
     vuejs2.0
     beforeCreate -> created -> beforeMount -> mounted -> beforeUpdate -> updated -> beforeDestroy -> destroyed
 
-    2. 
+    1. 
     去除$dispatch与$broadcast
     使用emit与on的方法
 
     
-    3. 绑定一次
+    1. 绑定一次
     {{*msg}}
     <div v-once>{{msg}}</div>
     vue2.0已废弃 请使用v-once
 
-    4. 绑定html代码
+    1. 绑定html代码
     {{{msg}}}
     <div v-html="msg"></div>
     {{{msg}}}写法vue2.0已废弃,请使用v-html
 
-    5. 循环v-for
+    1. 循环v-for
     数组
     1.0默认通过value进行遍历(key,value),遍历需加track-by="$index"(不加重复数据不绑定)
 
@@ -58,19 +76,27 @@
    递归 、toString 、 reduce 、 扩展运算符
 
 
-- 数据库读写分离是什么？ 主从数据库? 分库分表呢？   （https://blog.csdn.net/justdb/article/details/17331569）
-
+- 数据库读写分离是什么？ 主从数据库? 分库分表呢？   （https://blog.csdn.net/justdb/article/details/17331569）（https://www.jianshu.com/p/000dfd9bc3cf）（https://www.jianshu.com/p/ab704b437ebd）
+    
+    读写分离的实现是靠主从服务器实现，主服务器不执行读操作只执行写操作，  从服务器只执行读操作（主服务器写操作之后，从服务器也会做同步， 同步方式有两种，一般是通过binarylog二进制log文件获取主库的操作进行同步）。
+    实现读写分离的实现方式有两大类：
+    1. 应用层：比如springjdbc、mybatis、hibernate通过配置多个数据源，一个用于写，其他用于读，这个方式在一主一从的时候很好实现，但是如果是一主多从，还需要通过一定的算法将读操作分摊到多个从库 ； 这样的优势是配置简单，避免了添加代理的复杂配置，并且少了代理层性能更好，不过将读写分离强耦合到业务代码中，不利于扩展
+    2. 通过mysql-proxy这样的代理：在应用层和数据库之间新加一层代理， mysql请求都打到代理上，代理进行读写分配和负载均衡，这样的实现较为复杂，但是完全屏蔽了读写分离的实现，是比较好的工程实现方式
+    3. 通过HAProxy：HAProxy工作在TCP/IP层，也需要应用层配合， 将读写分配给两个端口，一个端口写，一个端口读，读操作会由HAProxy进行负载均衡
 
 - 数据一致性?
 
 
 - 重放攻击 ， CSRF攻击说一下
 
+
 - post请求的content-type常用类型， 什么情况下选用什么类型
-- 
+  
+
 
 - js实现链式函数 ， 写出a、b、c三个函数， 使得a().b().c()的输出结果是a、b、c
-- 
+ 
+
 
 - script标签的src加载 以及 text加载的时机？
     两者都是在挂载到dom树上之后才开始加载或者执行， src是异步的 ， text是同步的
@@ -130,7 +156,6 @@
 - 说一下你项目中的权限设计？
   
 
-- SPA应用第一次加载获取打包文件太多如何优化？ 如何异步加载？ （https://blog.csdn.net/ligang2585116/article/details/80170539）
   
 
 - 知道async ， await的原理吗？了解Generator吗 
