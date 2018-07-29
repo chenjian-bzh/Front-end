@@ -2,6 +2,22 @@
 
 ## <a name='other'>前端框架</a>
 
+
+- 说一下Virtual Dom的理解？
+
+  真实的dom树是浏览器渲染引擎为我们构建的， 然后暴露出js的api供我们调用，使得我们可以对dom节点进行增删改查，但是很多操作都会造成浏览器的重排和重绘 。 虚拟dom就是使用javascript对象来描述dom结构， 修改了虚拟dom之后通过diff算法取得两个对象的差异， 然后使用最少的操作完成dom更新。
+  大概流程如下：
+  1. var tree = React.createElement('div', {props:{id:'test'}} , 'Hello World) //创建虚拟DOM
+
+  2. realRoot = ReactDOM.render(tree, document.getelementById('container')) //将虚拟dom插入页面
+
+  3. var newtree = React.createElement('div', {props:{id:'test'}} , 'React') //创建新的虚拟DOM
+
+  4. var patchs = diff(tree, newtree)  //计算两棵树的差异
+
+  5. realRoot = patch(realRoot, patchs) //将差异更新到真实dom中
+
+
 - React 使用场景？
 
 			逻辑复杂单页应用，偏中后台管理系统，纯展示性的UI页面不合适、
@@ -68,6 +84,9 @@
 		return <h1>hello , {props.name}</h1>
 	}
 	```
+
+
+- React.createClass 和 集成React.component的方式有什么不同？（https://www.peachis.me/react-createclass-versus-extends-react-component/）
 
 
 - 应该在React生命周期的什么阶段发出ajax请求，为什么？
