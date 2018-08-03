@@ -242,6 +242,10 @@
     4. 使用redux\dva
 
 
+- 父组件如何给所有子组件添加属性？（https://blog.csdn.net/ISaiSai/article/details/54572192）
+
+
+
 - 用过 React 技术栈中哪些数据流管理库？（http://www.alloyteam.com/2015/09/react-redux/）
 
 			Redux\Dva
