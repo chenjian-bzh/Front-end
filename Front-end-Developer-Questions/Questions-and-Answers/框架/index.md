@@ -2,6 +2,22 @@
 
 ## <a name='other'>前端框架</a>
 
+
+- 说一下Virtual Dom的理解？
+
+  真实的dom树是浏览器渲染引擎为我们构建的， 然后暴露出js的api供我们调用，使得我们可以对dom节点进行增删改查，但是很多操作都会造成浏览器的重排和重绘 。 虚拟dom就是使用javascript对象来描述dom结构， 修改了虚拟dom之后通过diff算法取得两个对象的差异， 然后使用最少的操作完成dom更新。
+  大概流程如下：
+  1. var tree = React.createElement('div', {props:{id:'test'}} , 'Hello World) //创建虚拟DOM
+
+  2. realRoot = ReactDOM.render(tree, document.getelementById('container')) //将虚拟dom插入页面
+
+  3. var newtree = React.createElement('div', {props:{id:'test'}} , 'React') //创建新的虚拟DOM
+
+  4. var patchs = diff(tree, newtree)  //计算两棵树的差异
+
+  5. realRoot = patch(realRoot, patchs) //将差异更新到真实dom中
+
+
 - React 使用场景？
 
 			逻辑复杂单页应用，偏中后台管理系统，纯展示性的UI页面不合适、
@@ -68,6 +84,9 @@
 		return <h1>hello , {props.name}</h1>
 	}
 	```
+
+
+- React.createClass 和 集成React.component的方式有什么不同？（https://www.peachis.me/react-createclass-versus-extends-react-component/）
 
 
 - 应该在React生命周期的什么阶段发出ajax请求，为什么？
@@ -307,6 +326,12 @@
     优点双向数据绑定,明显的分层,丰富的内置指令和工具函数适合一些小型的交互不是那么复杂的单页应用的开发缺点也很明显,react,vue这些库的优点就是他的缺点.首先双向数据绑定,在交互比较复杂的大型项目,数据流向就会很让人迷惑.然后是自身是一个重量级的框架,用户要受到框架的很多制约灵活性不够.没有react或者vue这样的单文件组件,写一个组件,往往要在html,js,css三个文件中切换.一些小型项目还好,可到了大型项目简直就是灾难.每增加一个组件就要增加三个文件,文件非常琐碎丑陋的依赖注入,自身没有模块打包的能力也没有提供相关的打包的工具,却实现了一个很奇葩的靠依赖注入的模块系统.还不能用来隔离命名空间.完全是鸡肋,为了这个奇葩的依赖注入系统你就不得不写冗长没用的语法,尽管有构建工具帮忙.自身的事件系统不够完整.声称自己是用来做单页应用的可是最基本的触摸事件都没有,拖拽这些也得自己定义.复杂的api,蛋疼的学习难度.ui-router的嵌套路由很不灵活.总的来说angular1.x已经不适合当前的开发了.
 
 
+- webpack的作用 ？
+
+	webpack是一个集成打包工具 ， 可以进行代码分割，实现延迟加载资源 ； 各种loader可以进行代码转换，无论是AMD、commonJS、还是ES6的模块写的代码都可以转换，React的jsx、Vue的模板写法、 less、sass写法也可以进行转换
+
+	常用插件：
+	1. html-webpack-plugin 用于将打包文件插入html文件中
 
 - 为何使用Vuex 、 Redux这类全局状态管理的类库？
    
